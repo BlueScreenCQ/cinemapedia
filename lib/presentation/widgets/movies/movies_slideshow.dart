@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:card_swiper/card_swiper.dart';
-import 'package:flutter/material.dart';
 
 import '../../../domain/entities/movie.dart';
 
@@ -82,7 +83,11 @@ class _Slide extends StatelessWidget {
                       ),
                       );
                   }
-                  return FadeIn(child: child);
+                  return GestureDetector(
+                    onTap: () => context.push('/movie/${movie.id}'),
+                    child: FadeIn(
+                      child: child
+                      ));
                 },
               ),
 

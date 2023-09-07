@@ -1,7 +1,7 @@
-import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:go_router/go_router.dart';
 
 
 class MovieHorizontalListview extends StatefulWidget {
@@ -72,9 +72,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return FadeInRight(
-                  child: FadeInRight(
-                    child: _Slide(movie: widget.movies[index])
-                    )
+                  child: _Slide(movie: widget.movies[index])
                   );
               },
             )
@@ -120,7 +118,10 @@ class _Slide extends StatelessWidget {
                       child: Center(child: CircularProgressIndicator(strokeWidth: 2 )),
                     );
                   }
-                  return FadeIn(child: child);
+                  return GestureDetector(
+                    onTap: () => context.push('/movie/${movie.id}'),
+                    child: FadeIn(child: child)
+                    );
                 },
               ),
             ),
@@ -140,27 +141,19 @@ class _Slide extends StatelessWidget {
           ),
 
           //* Rating
-          SizedBox(
-            width: 150,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon( Icons.star_half_outlined, color: Colors.yellow.shade800 ),
-                const SizedBox(width: 2),
-                Text('${ movie.voteAverage }', style: textStyles.bodyMedium?.copyWith( color: Colors.yellow.shade800 )),
-                const Spacer(),
-                // const SizedBox(width: 15.0),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3.0),
-                  child: Text( HumanFormats.number(movie.popularity), style: textStyles.bodySmall ),
+          
+          if(movie.voteCount > 0)
+              SizedBox(
+                width: 150,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon( Icons.star_half_outlined, color: Colors.yellow.shade800 ),
+                    const SizedBox(width: 2),
+                    Text('${ movie.voteAverage }', style: textStyles.bodyMedium?.copyWith( color: Colors.yellow.shade800 )),
+                  ],
                 ),
-                const Text( ' votos' ),
-                    
-              ],
-            ),
-          )
-
-
+              )
         ],
       ),
     );
