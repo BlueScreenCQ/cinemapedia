@@ -1,3 +1,4 @@
+import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
@@ -10,13 +11,15 @@ class MovieHorizontalListview extends StatefulWidget {
   final String? title;
   final String? subTitle;
   final VoidCallback? loadNextPage;
+  final bool? showDate;
 
   const MovieHorizontalListview({
     super.key,
     required this.movies,
     this.title, 
     this.subTitle,
-    this.loadNextPage
+    this.loadNextPage,
+    this.showDate
   });
 
   @override
@@ -72,7 +75,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return FadeInRight(
-                  child: _Slide(movie: widget.movies[index])
+                  child: _Slide(movie: widget.movies[index], showDate: widget.showDate)
                   );
               },
             )
@@ -88,8 +91,9 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
 class _Slide extends StatelessWidget {
 
   final Movie movie;
+  final bool? showDate;
 
-  const _Slide({ required this.movie });
+  const _Slide({ required this.movie, this.showDate = false });
 
   @override
   Widget build(BuildContext context) {
@@ -140,20 +144,33 @@ class _Slide extends StatelessWidget {
             ),
           ),
 
-          //* Rating
-          
-          if(movie.voteCount > 0)
-              SizedBox(
-                width: 150,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon( Icons.star_half_outlined, color: Colors.yellow.shade800 ),
-                    const SizedBox(width: 2),
-                    Text('${ movie.voteAverage }', style: textStyles.bodyMedium?.copyWith( color: Colors.yellow.shade800 )),
-                  ],
-                ),
-              )
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if(showDate == true)
+                if(movie.releaseDate != null) ...[
+                  const Icon(Icons.calendar_month_outlined, size: 20),
+                  const SizedBox(width: 2),
+                  Text(
+                    HumanFormats.fechaCorta(movie.releaseDate!),
+                    style: textStyles.bodySmall,
+                    ),
+                  const SizedBox(width: 15.0),
+                ],
+
+              //* Rating
+
+              if(movie.voteCount > 0) ...[
+                Icon(Icons.star_half_rounded, color: Colors.yellow.shade800, size: 20),
+                const SizedBox(width: 2),
+                Text(
+                  HumanFormats.number(movie.voteAverage, 2),
+                  style: textStyles.bodySmall!.copyWith(color:Colors.yellow.shade800 ),
+                )
+              ]
+                    
+            ],
+          )
         ],
       ),
     );

@@ -155,7 +155,7 @@ class _MovieDetails extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final size = MediaQuery.of(context).size;
-    final colors = Theme.of(context).colorScheme;
+    // final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     
     
@@ -167,15 +167,50 @@ class _MovieDetails extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
     
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  movie.posterPath,
-                  width: size.width * 0.3,
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      movie.posterPath,
+                      width: size.width * 0.3,
+                    ),
+                  ),
+
+                  const SizedBox(height: 5.0),
+
+                   // Rating
+                  SizedBox(
+                    width: 120,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon( Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
+                        const SizedBox(width: 2),
+                        Text(movie.voteAverage.toStringAsPrecision(2), style: textStyle.titleMedium?.copyWith( color: Colors.yellow.shade800 )),
+                        // const Spacer(),
+                        const SizedBox(width: 15.0),
+                        Text( HumanFormats.number(movie.popularity), style: textStyle.titleMedium ),                  
+                        ],
+                      ),
+                    ),
+
+                  if(movie.releaseDate != null)
+                  SizedBox(
+                    width: 120,
+                    child: Text(
+                      '${movie.releaseDate!.day.toString().padLeft(2, '0')}/${movie.releaseDate!.month.toString().padLeft(2, '0')}/${movie.releaseDate!.year.toString().padLeft(4, '0')}',
+                      style: textStyle.titleMedium,
+                      textAlign: TextAlign.center,
+                      ),
+                  ),
+                ],
               ),
     
               const SizedBox( width: 10),
@@ -185,7 +220,7 @@ class _MovieDetails extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(movie.title, style: textStyle.titleLarge),
+                    Text(movie.title, style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 3.0),
                     Text(movie.overview),
                   ],
@@ -195,28 +230,6 @@ class _MovieDetails extends StatelessWidget {
             ]
             ),
           ),
-
-           // Rating
-          Center(
-            child: SizedBox(
-              width: 180,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0),
-                    child: Icon( Icons.star_half_outlined, color: Colors.yellow.shade800, size: 30),
-                  ),
-                  const SizedBox(width: 2),
-                  Text('${ movie.voteAverage.toStringAsPrecision(2)}', style: textStyle.titleLarge?.copyWith( color: Colors.yellow.shade800 )),
-                  const Spacer(),
-                  // const SizedBox(width: 15.0),
-                  Text( '${HumanFormats.number(movie.popularity)} votos', style: textStyle.titleLarge ),                  
-                  ],
-                ),
-              ),
-          ),
-    
     
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
