@@ -5,6 +5,8 @@ class AppTheme {
   ThemeData getTheme() => ThemeData(
     useMaterial3: true,
     colorSchemeSeed: const Color(0xff2862F5)
+
+    //TODO PONER TEMA OSCURO
   );
 
 }
