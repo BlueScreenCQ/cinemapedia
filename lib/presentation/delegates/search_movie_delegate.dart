@@ -53,7 +53,6 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   String get searchFieldLabel => 'Buscar películas';
 
   Widget buildResultsAndSuggestions(){
-
     return StreamBuilder(
       initialData: initialMovies,
       stream: debounceMovies.stream,
@@ -79,7 +78,6 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   List<Widget>? buildActions(BuildContext context) {
     
     return [
-
       StreamBuilder(
         stream: isLoading.stream,
         initialData: false,
@@ -162,10 +160,12 @@ class _MovieSearchItem extends StatelessWidget {
               width: size.width*0.2,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  movie.posterPath,
-                  loadingBuilder: (context, child, loadingProgress) => FadeIn(child: child),
-                  ),              
+                child: FadeInImage(
+                  height: 130,
+                  fit: BoxFit.cover,
+                  image: NetworkImage(movie.posterPath),
+                  placeholder: const AssetImage('assets/loaders/bottle-loader.gif'),
+                ),              
                 ),
             ),
     

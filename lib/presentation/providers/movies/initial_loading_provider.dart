@@ -5,7 +5,7 @@ import 'movies_provider.dart';
 final initialLoadingProvider = Provider<bool>((ref) {
 
     final step1 = ref.watch(nowPlayingProvider).isEmpty;
-    final step2 = ref.watch(popularProvider).isEmpty;
+    final step2 = ref.watch(trendingProvider).isEmpty;
     final step3 = ref.watch(upcomingProvider).isEmpty;
     final step4 = ref.watch(topRatedProvider).isEmpty;
 

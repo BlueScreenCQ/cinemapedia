@@ -12,14 +12,16 @@ class MovieHorizontalListview extends StatefulWidget {
   final String? subTitle;
   final VoidCallback? loadNextPage;
   final bool? showDate;
+  final bool? onlyYear;
 
-  const MovieHorizontalListview({
+   const MovieHorizontalListview({
     super.key,
     required this.movies,
     this.title, 
     this.subTitle,
     this.loadNextPage,
-    this.showDate
+    this.showDate = false,
+    this.onlyYear = false
   });
 
   @override
@@ -75,7 +77,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return FadeInRight(
-                  child: _Slide(movie: widget.movies[index], showDate: widget.showDate)
+                  child: _Slide(movie: widget.movies[index], showDate: widget.showDate, onlyYear: widget.onlyYear)
                   );
               },
             )
@@ -92,8 +94,9 @@ class _Slide extends StatelessWidget {
 
   final Movie movie;
   final bool? showDate;
+  final bool? onlyYear;
 
-  const _Slide({ required this.movie, this.showDate = false });
+   const _Slide({ required this.movie, this.showDate = false, this.onlyYear = false });
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +118,7 @@ class _Slide extends StatelessWidget {
                 movie.posterPath,
                 fit: BoxFit.cover,
                 width: 150,
+                height: 230,
                 loadingBuilder: (context, child, loadingProgress) {
                   if ( loadingProgress != null ) {
                     return const Padding(
@@ -152,7 +156,9 @@ class _Slide extends StatelessWidget {
                   const Icon(Icons.calendar_month_outlined, size: 20),
                   const SizedBox(width: 2),
                   Text(
-                    HumanFormats.fechaCorta(movie.releaseDate!),
+                    onlyYear == true
+                      ? '${movie.releaseDate!.year}'
+                      : HumanFormats.fechaCorta(movie.releaseDate!),
                     style: textStyles.bodySmall,
                     ),
                   const SizedBox(width: 15.0),
@@ -176,7 +182,6 @@ class _Slide extends StatelessWidget {
     );
   }
 }
-
 
 
 class _Title extends StatelessWidget {

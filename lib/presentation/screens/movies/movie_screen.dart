@@ -1,3 +1,5 @@
+import 'package:cinemapedia/presentation/widgets/movies/similar_movies.dart';
+import 'package:cinemapedia/presentation/widgets/videos/videos_from_movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
@@ -6,8 +8,7 @@ import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:animate_do/animate_do.dart';
 
-
-import '../../providers/providers.dart';
+import 'package:cinemapedia/presentation/providers/providers.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
 
@@ -32,7 +33,6 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
 
     ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
     ref.read(actorsByMovieProvider.notifier).loadActors(widget.movieId);
-    
     
   }
 
@@ -107,27 +107,32 @@ class _CustomSliverAppbar extends ConsumerWidget {
             )
         ],
         flexibleSpace: FlexibleSpaceBar(
-          titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          // title: Text(
-          //   movie.title,
-          //   style: const TextStyle(fontSize: 20),
-          //   textAlign: TextAlign.start,
-          //   ),
-        background: Stack(
-          children: [
-            SizedBox.expand(
-              child: Image.network(
-                movie.posterPath,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) return const  SizedBox();
-                  return FadeIn(
-                    child: child
-                    );
-                },
-              ),
+          titlePadding: const EdgeInsets.only(bottom: 0),
+          //Gradiente título
+          title: const _CustomGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [ 0.8, 1.0 ],
+              colors: [
+                Colors.transparent,
+                Colors.black54,
+              ]
             ),
-
+          background: Stack(
+            children: [
+              SizedBox.expand(
+                child: Image.network(
+                  movie.posterPath,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress != null) return const  SizedBox();
+                    return FadeIn(
+                      child: child
+                      );
+                  },
+                ),
+              ),
+          
             //Gradiente botón fav
             const _CustomGradient(
               begin: Alignment.topRight,
@@ -138,18 +143,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
                 Colors.transparent,
               ]
               ),
-
-              //Gradiente título
-              const _CustomGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [ 0.8, 1.0 ],
-              colors: [
-                Colors.transparent,
-                Colors.black54,
-              ]
-              ),
-
+          
               //Gradiente flecha atrás
               const _CustomGradient(
               begin: Alignment.topLeft,
@@ -160,9 +154,9 @@ class _CustomSliverAppbar extends ConsumerWidget {
                 Colors.transparent,
               ]
               ),
-
+          
           ],
-        ),
+                ),
         ),
 
         
@@ -206,9 +200,9 @@ class _MovieDetails extends StatelessWidget {
                       width: size.width * 0.3,
                     ),
                   ),
-
+    
                   const SizedBox(height: 5.0),
-
+    
                    // Rating
                   SizedBox(
                     width: 120,
@@ -225,7 +219,7 @@ class _MovieDetails extends StatelessWidget {
                         ],
                       ),
                     ),
-
+    
                   if(movie.releaseDate != null)
                   SizedBox(
                     width: 120,
@@ -272,13 +266,20 @@ class _MovieDetails extends StatelessWidget {
             ),
             ),
     
-            //TODO: HACER CLICABLES LOS GÉNEROS, PELÍCULAS SIMILARES
+            //TODO: HACER CLICABLES LOS GÉNEROS
     
           _ActorsByMovie(movieID: movie.id.toString()),
     
-      
-      
-        const SizedBox(height: 50)
+          //* Videos de la película (si tiene)
+          VideosFromMovie( movieId: movie.id ),
+    
+          //* Películas similares
+          Padding(
+            padding: const EdgeInsets.only(top:20),
+            child: SimilarMovies(movieId: movie.id ),
+          ),
+    
+        // const SizedBox(height: 50)
       ],
     );
   }
@@ -346,11 +347,11 @@ class _ActorsByMovie extends ConsumerWidget {
                       //Name
                       Text(actor.character ?? '',
                       maxLines: 2,
-                      style: TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis ),
                       ),
                       Text(actor.name,
                       maxLines: 2,
-                      style: TextStyle(overflow: TextOverflow.ellipsis),
+                      style: const TextStyle(overflow: TextOverflow.ellipsis),
                       ),
                   ]
                   ),
@@ -392,18 +393,18 @@ class _ActorsByMovie extends ConsumerWidget {
                       //Name
                       Text(item.name,
                       maxLines: 2,
-                      style: TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis ),
                       ),
 
                       Text(item.job ?? '',
                       maxLines: 2,
-                      style: TextStyle(overflow: TextOverflow.ellipsis ),
+                      style: const TextStyle(overflow: TextOverflow.ellipsis ),
                       ),
 
                       if(item.departament != null)
                         Text('(${item.departament})',
                         maxLines: 2,
-                        style: TextStyle(overflow: TextOverflow.ellipsis ),
+                        style: const TextStyle(overflow: TextOverflow.ellipsis ),
                         ),
                   ]
                   ),
@@ -413,8 +414,6 @@ class _ActorsByMovie extends ConsumerWidget {
           ),
       ],
     );
-
-    
   }
 }
 

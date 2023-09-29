@@ -11,19 +11,21 @@ class HomeView extends ConsumerStatefulWidget {
   HomeViewState createState() => HomeViewState();
 }
 
-class HomeViewState extends ConsumerState<HomeView> {
+class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
 
     ref.read(nowPlayingProvider.notifier).loadNextPage();
-    ref.read(popularProvider.notifier).loadNextPage();
+    ref.read(trendingProvider.notifier).loadNextPage();
     ref.read(topRatedProvider.notifier).loadNextPage();
     ref.read(upcomingProvider.notifier).loadNextPage();
   }
 
   @override
   Widget build(BuildContext context) {
+    
+    super.build(context);
 
     final initialLoading = ref.watch(initialLoadingProvider);
 
@@ -33,7 +35,7 @@ class HomeViewState extends ConsumerState<HomeView> {
 
     final slideshowMovies = ref.watch(moviesSlideshowProvider);
     final nowPlayingMovies = ref.watch(nowPlayingProvider);
-    final popularMovies = ref.watch(popularProvider);
+    final trendingMovies = ref.watch(trendingProvider);
     final upcomingMovies = ref.watch(upcomingProvider);
     final topRatedMovies = ref.watch(topRatedProvider);
 
@@ -74,15 +76,19 @@ class HomeViewState extends ConsumerState<HomeView> {
                 loadNextPage: () => ref.read(upcomingProvider.notifier).loadNextPage(),
               ),
               MovieHorizontalListview(
-                movies: popularMovies,
-                title: 'Populares',
+                movies: trendingMovies,
+                title: 'En tendencia',
+                showDate: true,
+                onlyYear: false,
                 // subTitle: '',
-                loadNextPage: () => ref.read(popularProvider.notifier).loadNextPage(),
+                loadNextPage: () => ref.read(trendingProvider.notifier).loadNextPage(),
               ),
               MovieHorizontalListview(
                 movies: topRatedMovies,
                 title: 'Mejor valoradas',
                 subTitle: 'Desde siempre',
+                showDate: true,
+                onlyYear: true,
                 loadNextPage: () => ref.read(topRatedProvider.notifier).loadNextPage(),
               ),
               const SizedBox(height: 20)
@@ -92,4 +98,7 @@ class HomeViewState extends ConsumerState<HomeView> {
         childCount: 1))
     ]);
   }
+  
+  @override
+  bool get wantKeepAlive =>true;
 }
