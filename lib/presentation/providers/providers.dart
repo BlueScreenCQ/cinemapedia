@@ -12,3 +12,6 @@ export 'search/search_movies_provider.dart';
 export 'storage/local_storage_provider.dart';
 export 'storage/is_favorite_provider.dart';
 export 'storage/favorites_movies_provider.dart';
+
+export 'watch_providers/watch_provider_by_movie_provider.dart';
+export 'watch_providers/watch_provider_repository_provider.dart';

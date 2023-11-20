@@ -4,9 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:go_router/go_router.dart';
 
-
 class MovieHorizontalListview extends StatefulWidget {
-
   final List<Movie> movies;
   final String? title;
   final String? subTitle;
@@ -14,38 +12,35 @@ class MovieHorizontalListview extends StatefulWidget {
   final bool? showDate;
   final bool? onlyYear;
 
-   const MovieHorizontalListview({
-    super.key,
-    required this.movies,
-    this.title, 
-    this.subTitle,
-    this.loadNextPage,
-    this.showDate = false,
-    this.onlyYear = false
-  });
+  const MovieHorizontalListview(
+      {super.key,
+      required this.movies,
+      this.title,
+      this.subTitle,
+      this.loadNextPage,
+      this.showDate = false,
+      this.onlyYear = false});
 
   @override
-  State<MovieHorizontalListview> createState() => _MovieHorizontalListviewState();
+  State<MovieHorizontalListview> createState() =>
+      _MovieHorizontalListviewState();
 }
 
 class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
-
-
   final scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    
-    scrollController.addListener(() {
-      if ( widget.loadNextPage == null ) return;
 
-      if ( (scrollController.position.pixels + 200) >= scrollController.position.maxScrollExtent ) {
+    scrollController.addListener(() {
+      if (widget.loadNextPage == null) return;
+
+      if ((scrollController.position.pixels + 200) >=
+          scrollController.position.maxScrollExtent) {
         widget.loadNextPage!();
       }
-
     });
-
   }
 
   @override
@@ -54,61 +49,54 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+    if (widget.movies.length <= 2) widget.loadNextPage!();
+
     return SizedBox(
       height: 350,
       child: Column(
         children: [
-
-          if ( widget.title != null || widget.subTitle != null )
-            _Title(title: widget.title, subTitle: widget.subTitle ),
-
+          if (widget.title != null || widget.subTitle != null)
+            _Title(title: widget.title, subTitle: widget.subTitle),
           const SizedBox(height: 5.0),
-
-
           Expanded(
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: widget.movies.length,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return FadeInRight(
-                  child: _Slide(movie: widget.movies[index], showDate: widget.showDate, onlyYear: widget.onlyYear)
-                  );
-              },
-            )
-          )
-
+              child: ListView.builder(
+            controller: scrollController,
+            itemCount: widget.movies.length,
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return FadeInRight(
+                  child: _Slide(
+                      movie: widget.movies[index],
+                      showDate: widget.showDate,
+                      onlyYear: widget.onlyYear));
+            },
+          ))
         ],
       ),
     );
   }
 }
 
-
 class _Slide extends StatelessWidget {
-
   final Movie movie;
   final bool? showDate;
   final bool? onlyYear;
 
-   const _Slide({ required this.movie, this.showDate = false, this.onlyYear = false });
+  const _Slide(
+      {required this.movie, this.showDate = false, this.onlyYear = false});
 
   @override
   Widget build(BuildContext context) {
-
     final textStyles = Theme.of(context).textTheme;
 
     return Container(
-      margin: const EdgeInsets.symmetric( horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           //* Imagen
           SizedBox(
             width: 150,
@@ -120,16 +108,16 @@ class _Slide extends StatelessWidget {
                 width: 150,
                 height: 230,
                 loadingBuilder: (context, child, loadingProgress) {
-                  if ( loadingProgress != null ) {
+                  if (loadingProgress != null) {
                     return const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Center(child: CircularProgressIndicator(strokeWidth: 2 )),
+                      child: Center(
+                          child: CircularProgressIndicator(strokeWidth: 2)),
                     );
                   }
                   return GestureDetector(
-                    onTap: () => context.push('/home/0/movie/${movie.id}'),
-                    child: FadeIn(child: child)
-                    );
+                      onTap: () => context.push('/home/0/movie/${movie.id}'),
+                      child: FadeIn(child: child));
                 },
               ),
             ),
@@ -151,30 +139,31 @@ class _Slide extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              if(showDate == true)
-                if(movie.releaseDate != null) ...[
+              if (showDate == true)
+                if (movie.releaseDate != null) ...[
                   const Icon(Icons.calendar_month_outlined, size: 20),
                   const SizedBox(width: 2),
                   Text(
                     onlyYear == true
-                      ? '${movie.releaseDate!.year}'
-                      : HumanFormats.fechaCorta(movie.releaseDate!),
+                        ? '${movie.releaseDate!.year}'
+                        : HumanFormats.fechaCorta(movie.releaseDate!),
                     style: textStyles.bodySmall,
-                    ),
+                  ),
                   const SizedBox(width: 15.0),
                 ],
 
               //* Rating
 
-              if(movie.voteCount > 0) ...[
-                Icon(Icons.star_half_rounded, color: Colors.yellow.shade800, size: 20),
+              if (movie.voteCount > 0) ...[
+                Icon(Icons.star_half_rounded,
+                    color: Colors.yellow.shade800, size: 20),
                 const SizedBox(width: 2),
                 Text(
                   HumanFormats.number(movie.voteAverage, 2),
-                  style: textStyles.bodySmall!.copyWith(color:Colors.yellow.shade800 ),
+                  style: textStyles.bodySmall!
+                      .copyWith(color: Colors.yellow.shade800),
                 )
               ]
-                    
             ],
           )
         ],
@@ -183,38 +172,28 @@ class _Slide extends StatelessWidget {
   }
 }
 
-
 class _Title extends StatelessWidget {
-
   final String? title;
   final String? subTitle;
 
-
-  const _Title({ this.title, this.subTitle});
+  const _Title({this.title, this.subTitle});
 
   @override
   Widget build(BuildContext context) {
-
     final titleStyle = Theme.of(context).textTheme.titleLarge;
 
     return Container(
-      padding: const EdgeInsets.only( top: 10),
+      padding: const EdgeInsets.only(top: 10),
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         children: [
-          
-          if ( title != null )
-            Text(title!, style: titleStyle ),
-          
+          if (title != null) Text(title!, style: titleStyle),
           const Spacer(),
-
-          if ( subTitle != null )
+          if (subTitle != null)
             FilledButton.tonal(
-              style: const ButtonStyle( visualDensity: VisualDensity.compact ),
-              onPressed: (){}, 
-              child: Text( subTitle! )
-          )
-
+                style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                onPressed: () {},
+                child: Text(subTitle!))
         ],
       ),
     );
