@@ -1,5 +1,7 @@
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:cinemapedia/presentation/widgets/movies/similar_movies.dart';
+import 'package:cinemapedia/presentation/widgets/shared/custom_gradient.dart';
+import 'package:cinemapedia/presentation/widgets/shared/custom_read_more_text.dart';
 import 'package:cinemapedia/presentation/widgets/videos/videos_from_movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +12,7 @@ import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:animate_do/animate_do.dart';
 
 import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:go_router/go_router.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';
@@ -90,7 +93,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.only(bottom: 0),
         //Gradiente título
-        title: const _CustomGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [
+        title: const CustomGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [
           0.8,
           1.0
         ], colors: [
@@ -111,7 +114,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
             ),
 
             //Gradiente botón fav
-            const _CustomGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, stops: [
+            const CustomGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, stops: [
               0.0,
               0.2
             ], colors: [
@@ -120,7 +123,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
             ]),
 
             //Gradiente flecha atrás
-            const _CustomGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, stops: [
+            const CustomGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, stops: [
               0.0,
               0.3
             ], colors: [
@@ -211,7 +214,11 @@ class _MovieDetails extends StatelessWidget {
                   Text(movie.title, style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
                   if (movie.title != movie.originalTitle) Text(movie.originalTitle, style: textStyle.titleMedium!.copyWith(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
                   const SizedBox(height: 3.0),
-                  Text(movie.overview),
+                  // Text(movie.overview),
+                  CustomReadMoreText(
+                    text: movie.overview,
+                    trimLines: 8,
+                  ),
                 ],
               ),
             ),
@@ -324,35 +331,38 @@ class _ActorsByMovie extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final Actor actor = actors[index];
 
-                return Container(
-                  padding: const EdgeInsets.all(8.0),
-                  width: 135,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    //Actor photo
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        actor.profilePath!,
-                        height: 180,
-                        width: 135,
-                        fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () => context.push('/home/0/actor/${actor.id}'),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: 135,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      //Actor photo
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          actor.profilePath,
+                          height: 180,
+                          width: 135,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 5),
+                      const SizedBox(height: 5),
 
-                    //Name
-                    Text(
-                      actor.id.toString(),
-                      maxLines: 2,
-                      style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                    ),
-                    Text(
-                      actor.character ?? '',
-                      maxLines: 2,
-                      style: const TextStyle(fontStyle: FontStyle.italic, overflow: TextOverflow.ellipsis),
-                    ),
-                  ]),
+                      //Name
+                      Text(
+                        actor.name,
+                        maxLines: 2,
+                        style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                      ),
+                      Text(
+                        actor.character ?? '',
+                        maxLines: 2,
+                        style: const TextStyle(fontStyle: FontStyle.italic, overflow: TextOverflow.ellipsis),
+                      ),
+                    ]),
+                  ),
                 );
               }),
         ),
@@ -407,22 +417,6 @@ class _ActorsByMovie extends ConsumerWidget {
               }),
         ),
       ],
-    );
-  }
-}
-
-class _CustomGradient extends StatelessWidget {
-  final AlignmentGeometry begin;
-  final AlignmentGeometry end;
-  final List<double> stops;
-  final List<Color> colors;
-
-  const _CustomGradient({required this.begin, required this.end, required this.stops, required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: begin, end: end, stops: stops, colors: colors))),
     );
   }
 }

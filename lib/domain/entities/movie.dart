@@ -20,6 +20,15 @@ class Movie {
   final bool video;
   final double voteAverage;
   final int voteCount;
+  final String? name;
+
+  //PARA CAST
+  final String? mediaType;
+  final DateTime? firstAirDate;
+  final int? episodeCount;
+  final String? character;
+  final String? department;
+  final String? job;
 
   Movie(
       {required this.adult,
@@ -35,5 +44,12 @@ class Movie {
       required this.title,
       required this.video,
       required this.voteAverage,
-      required this.voteCount});
+      required this.voteCount,
+      this.name,
+      this.mediaType,
+      this.character,
+      this.firstAirDate,
+      this.episodeCount,
+      this.department,
+      this.job});
 }
