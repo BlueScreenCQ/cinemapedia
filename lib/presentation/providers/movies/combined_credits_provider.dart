@@ -22,6 +22,42 @@ class CombinedCreditsNotifier extends StateNotifier<Map<String, Map<String, List
 
     final credits = await getCombinedCredits(actorID);
 
+    splitMoviesAndTV(credits);
+
+    // orderCredits(credits);
+
     state = {...state, actorID: credits};
   }
+}
+
+
+// Map<String, List<Movie>> orderCredits(Map<String, List<Movie>> credits) {
+
+//   credits['Actors']!.sort((a,b) => a.releaseDate!.compareTo(b.releaseDate!));
+
+
+
+//   return credits;
+// }
+
+Map<String, List<Movie>> splitMoviesAndTV(Map<String, List<Movie>> credits) {
+
+  List<Movie> tv = [];
+
+for(int i= 0; i<credits['Cast']!.length; i++){
+  if(credits['Cast']![i].mediaType=="tv"){
+    tv.add(credits['Cast']![i]);
+    credits['Cast']!.remove(credits['Cast']![i]);
+  }
+ }
+
+ for(int i= 0; i<credits['Cast']!.length; i++){
+  if(credits['Cast']![i].mediaType=="tv"){
+    credits['Cast']!.remove(credits['Cast']![i]);
+  }
+ }
+
+ credits['TV'] = tv;
+
+  return credits;
 }

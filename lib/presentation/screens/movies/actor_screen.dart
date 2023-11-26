@@ -3,7 +3,6 @@ import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/actors/actor_info_provider.dart';
 import 'package:cinemapedia/presentation/providers/movies/combined_credits_provider.dart';
-import 'package:cinemapedia/presentation/widgets/shared/custom_gradient.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_read_more_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -241,16 +240,17 @@ class _CombinedCreditsByActor extends ConsumerWidget {
 
     final actors = combinedCredits[actorID]!['Cast'];
     final crew = combinedCredits[actorID]!['Crew'];
+    final tv = combinedCredits[actorID]!['TV'] ?? [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
+          padding: const EdgeInsets.only(left: 20, top: 10, bottom: 3),
           child: Text('Filmografía', style: textStyle.titleLarge),
         ),
 
-        //Cast
+        //Movies
         SizedBox(
           height: 300,
           child: ListView.builder(
@@ -288,12 +288,23 @@ class _CombinedCreditsByActor extends ConsumerWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          //*Date
-                          if (movie.releaseDate != null) ...[
+                          //*Date movie
+                          if (movie.mediaType == 'movie' && movie.releaseDate != null && movie.releaseDate!.year != 1900) ...[
                             const Icon(Icons.calendar_month_outlined, size: 20),
                             const SizedBox(width: 2),
                             Text(
                               '${movie.releaseDate!.year}',
+                              style: textStyle.bodySmall,
+                            ),
+                            const SizedBox(width: 15.0),
+                          ],
+
+                          //*Date TV
+                          if (movie.mediaType == 'tv' && movie.firstAirDate != null && movie.firstAirDate!.year != 1900) ...[
+                            const Icon(Icons.calendar_month_outlined, size: 20),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${movie.firstAirDate!.year}',
                               style: textStyle.bodySmall,
                             ),
                             const SizedBox(width: 15.0),
@@ -315,6 +326,89 @@ class _CombinedCreditsByActor extends ConsumerWidget {
                 );
               }),
         ),
+
+        Padding(
+          padding: const EdgeInsets.only(left: 20, top: 10, bottom: 3),
+          child: Text('TV', style: textStyle.titleLarge),
+        ),
+
+        //TV
+        SizedBox(
+          height: 300,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: tv!.length,
+              itemBuilder: (context, index) {
+                final Movie movie = tv[index];
+
+                return GestureDetector(
+                  // onTap: () => context.push('/home/0/movie/${movie.id}'),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: 135,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      //Movie Poster
+                      MovieOrTVPoster(movie: movie),
+
+                      const SizedBox(height: 5),
+
+                      //Name
+                      Text(
+                        (movie.mediaType == "movie") ? movie.title : movie.name!,
+                        maxLines: 2,
+                        style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                      ),
+
+                      Text(
+                        movie.character ?? '',
+                        maxLines: 2,
+                        style: const TextStyle(fontStyle: FontStyle.italic, overflow: TextOverflow.ellipsis),
+                      ),
+
+                      //TODO poner fecha de estreno bien (1900), cambiar a first time air si es TV, ordenar la lista por fecha,
+
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          //*Date movie
+                          if (movie.mediaType == 'movie' && movie.releaseDate != null && movie.releaseDate!.year != 1900) ...[
+                            const Icon(Icons.calendar_month_outlined, size: 20),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${movie.releaseDate!.year}',
+                              style: textStyle.bodySmall,
+                            ),
+                            const SizedBox(width: 15.0),
+                          ],
+
+                          //*Date TV
+                          if (movie.mediaType == 'tv' && movie.firstAirDate != null && movie.firstAirDate!.year != 1900) ...[
+                            const Icon(Icons.calendar_month_outlined, size: 20),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${movie.firstAirDate!.year}',
+                              style: textStyle.bodySmall,
+                            ),
+                            const SizedBox(width: 15.0),
+                          ],
+
+                          //* Rating
+                          if (movie.voteCount > 0) ...[
+                            Icon(Icons.star_half_rounded, color: Colors.yellow.shade800, size: 20),
+                            const SizedBox(width: 2),
+                            Text(
+                              HumanFormats.number(movie.voteAverage, 2),
+                              style: textStyle.bodySmall!.copyWith(color: Colors.yellow.shade800),
+                            )
+                          ]
+                        ],
+                      )
+                    ]),
+                  ),
+                );
+              }),
+        ),
+
 
         //Crew
         SizedBox(
