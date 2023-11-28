@@ -35,7 +35,7 @@ class ActorMovieDbDatasource extends ActorDatasource {
 
     Person personResponse = Person.fromJson(response.data);
 
-    Actor actor = ActorMapper.PersonToEntity(personResponse);
+    Actor actor = ActorMapper.personToEntity(personResponse);
 
     return actor;
   }

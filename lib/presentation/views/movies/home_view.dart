@@ -11,8 +11,7 @@ class HomeView extends ConsumerStatefulWidget {
   HomeViewState createState() => HomeViewState();
 }
 
-class HomeViewState extends ConsumerState<HomeView>
-    with AutomaticKeepAliveClientMixin {
+class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -58,18 +57,16 @@ class HomeViewState extends ConsumerState<HomeView>
             MovieHorizontalListview(
               movies: nowPlayingMovies,
               title: 'En cines',
-              subTitle: 'Lunes 20',
+              // subTitle: 'Lunes 20',
               showDate: true,
-              loadNextPage: () =>
-                  ref.read(nowPlayingProvider.notifier).loadNextPage(),
+              loadNextPage: () => ref.read(nowPlayingProvider.notifier).loadNextPage(),
             ),
             MovieHorizontalListview(
               movies: upcomingMovies,
               title: 'Próximamente',
-              subTitle: 'Desde hoy',
+              // subTitle: 'Desde hoy',
               showDate: true,
-              loadNextPage: () =>
-                  ref.read(upcomingProvider.notifier).loadNextPage(),
+              loadNextPage: () => ref.read(upcomingProvider.notifier).loadNextPage(),
             ),
             MovieHorizontalListview(
               movies: trendingMovies,
@@ -77,17 +74,15 @@ class HomeViewState extends ConsumerState<HomeView>
               showDate: true,
               onlyYear: false,
               // subTitle: '',
-              loadNextPage: () =>
-                  ref.read(trendingProvider.notifier).loadNextPage(),
+              loadNextPage: () => ref.read(trendingProvider.notifier).loadNextPage(),
             ),
             MovieHorizontalListview(
               movies: topRatedMovies,
               title: 'Mejor valoradas',
-              subTitle: 'Desde siempre',
+              // subTitle: 'Desde siempre',
               showDate: true,
               onlyYear: true,
-              loadNextPage: () =>
-                  ref.read(topRatedProvider.notifier).loadNextPage(),
+              loadNextPage: () => ref.read(topRatedProvider.notifier).loadNextPage(),
             ),
             const SizedBox(height: 20)
           ],

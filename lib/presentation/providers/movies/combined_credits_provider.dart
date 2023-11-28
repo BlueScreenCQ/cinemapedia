@@ -24,40 +24,41 @@ class CombinedCreditsNotifier extends StateNotifier<Map<String, Map<String, List
 
     splitMoviesAndTV(credits);
 
-    // orderCredits(credits);
+    orderCredits(credits);
 
     state = {...state, actorID: credits};
   }
 }
 
+Map<String, List<Movie>> orderCredits(Map<String, List<Movie>> credits) {
+  credits['Cast']!.sort((a, b) => a.releaseDate!.compareTo(b.releaseDate!));
+  credits['Cast'] = credits['Cast']!.reversed.toList();
 
-// Map<String, List<Movie>> orderCredits(Map<String, List<Movie>> credits) {
+  credits['TV']!.sort((a, b) => a.firstAirDate!.compareTo(b.firstAirDate!));
+  credits['TV'] = credits['TV']!.reversed.toList();
 
-//   credits['Actors']!.sort((a,b) => a.releaseDate!.compareTo(b.releaseDate!));
+  credits['Crew']!.sort((a, b) => (a.releaseDate ?? a.firstAirDate)!.compareTo(b.releaseDate!));
+  credits['Crew'] = credits['Crew']!.reversed.toList();
 
-
-
-//   return credits;
-// }
+  return credits;
+}
 
 Map<String, List<Movie>> splitMoviesAndTV(Map<String, List<Movie>> credits) {
-
   List<Movie> tv = [];
 
-for(int i= 0; i<credits['Cast']!.length; i++){
-  if(credits['Cast']![i].mediaType=="tv"){
-    tv.add(credits['Cast']![i]);
-    credits['Cast']!.remove(credits['Cast']![i]);
+  for (int i = 0; i < credits['Cast']!.length; i++) {
+    if (credits['Cast']![i].mediaType == "tv") {
+      tv.add(credits['Cast']![i]);
+    }
   }
- }
 
- for(int i= 0; i<credits['Cast']!.length; i++){
-  if(credits['Cast']![i].mediaType=="tv"){
-    credits['Cast']!.remove(credits['Cast']![i]);
+  for (int i = 0; i < credits['Cast']!.length; i++) {
+    if (credits['Cast']![i].mediaType == "tv") {
+      credits['Cast']!.remove(credits['Cast']![i]);
+    }
   }
- }
 
- credits['TV'] = tv;
+  credits['TV'] = tv;
 
   return credits;
 }

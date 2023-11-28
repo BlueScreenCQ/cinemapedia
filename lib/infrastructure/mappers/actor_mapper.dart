@@ -11,7 +11,7 @@ class ActorMapper {
           : 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
       character: cast.character);
 
-  static Actor PersonToEntity(Person person) => Actor(
+  static Actor personToEntity(Person person) => Actor(
         id: person.id,
         name: person.name,
         profilePath: person.profilePath != null

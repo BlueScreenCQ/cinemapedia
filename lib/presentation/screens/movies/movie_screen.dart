@@ -179,7 +179,7 @@ class _MovieDetails extends StatelessWidget {
                       Text(movie.voteAverage.toStringAsPrecision(2), style: textStyle.titleMedium?.copyWith(color: Colors.yellow.shade800)),
                       // const Spacer(),
                       const SizedBox(width: 15.0),
-                      Text('${HumanFormats.number(movie.popularity)}', style: textStyle.titleMedium),
+                      Text(HumanFormats.number(movie.popularity), style: textStyle.titleMedium),
                     ],
                   ),
                 ),
@@ -324,7 +324,7 @@ class _ActorsByMovie extends ConsumerWidget {
 
         //Actors
         SizedBox(
-          height: 260,
+          height: 280,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: actors!.length,
@@ -365,6 +365,11 @@ class _ActorsByMovie extends ConsumerWidget {
                   ),
                 );
               }),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
+          child: Text('Crew', style: textStyle.titleLarge),
         ),
 
         //Crew

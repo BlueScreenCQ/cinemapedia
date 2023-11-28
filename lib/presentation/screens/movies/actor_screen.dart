@@ -83,7 +83,7 @@ class _ActorDetails extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 5.0),
+                const SizedBox(height: 8.0),
 
                 // // Rating
                 // SizedBox(
@@ -232,7 +232,7 @@ class _CombinedCreditsByActor extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final textStyle = Theme.of(context).textTheme;
 
-    final combinedCredits = ref.watch(combinedCreditsProvider); //HASTA AQUI
+    final combinedCredits = ref.watch(combinedCreditsProvider);
 
     if (combinedCredits[actorID] == null) {
       return const CircularProgressIndicator(strokeWidth: 2);
@@ -252,7 +252,7 @@ class _CombinedCreditsByActor extends ConsumerWidget {
 
         //Movies
         SizedBox(
-          height: 300,
+          height: 290,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: actors!.length,
@@ -272,7 +272,7 @@ class _CombinedCreditsByActor extends ConsumerWidget {
 
                       //Name
                       Text(
-                        (movie.mediaType == "movie") ? movie.title : movie.name!,
+                        movie.title,
                         maxLines: 2,
                         style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                       ),
@@ -283,28 +283,15 @@ class _CombinedCreditsByActor extends ConsumerWidget {
                         style: const TextStyle(fontStyle: FontStyle.italic, overflow: TextOverflow.ellipsis),
                       ),
 
-                      //TODO poner fecha de estreno bien (1900), cambiar a first time air si es TV, ordenar la lista por fecha,
-
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           //*Date movie
-                          if (movie.mediaType == 'movie' && movie.releaseDate != null && movie.releaseDate!.year != 1900) ...[
+                          if (movie.releaseDate != null && movie.releaseDate!.year != 1900) ...[
                             const Icon(Icons.calendar_month_outlined, size: 20),
                             const SizedBox(width: 2),
                             Text(
                               '${movie.releaseDate!.year}',
-                              style: textStyle.bodySmall,
-                            ),
-                            const SizedBox(width: 15.0),
-                          ],
-
-                          //*Date TV
-                          if (movie.mediaType == 'tv' && movie.firstAirDate != null && movie.firstAirDate!.year != 1900) ...[
-                            const Icon(Icons.calendar_month_outlined, size: 20),
-                            const SizedBox(width: 2),
-                            Text(
-                              '${movie.firstAirDate!.year}',
                               style: textStyle.bodySmall,
                             ),
                             const SizedBox(width: 15.0),
@@ -328,16 +315,16 @@ class _CombinedCreditsByActor extends ConsumerWidget {
         ),
 
         Padding(
-          padding: const EdgeInsets.only(left: 20, top: 10, bottom: 3),
+          padding: const EdgeInsets.only(left: 20, bottom: 3),
           child: Text('TV', style: textStyle.titleLarge),
         ),
 
         //TV
         SizedBox(
-          height: 300,
+          height: 290,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: tv!.length,
+              itemCount: tv.length,
               itemBuilder: (context, index) {
                 final Movie movie = tv[index];
 
@@ -365,24 +352,11 @@ class _CombinedCreditsByActor extends ConsumerWidget {
                         style: const TextStyle(fontStyle: FontStyle.italic, overflow: TextOverflow.ellipsis),
                       ),
 
-                      //TODO poner fecha de estreno bien (1900), cambiar a first time air si es TV, ordenar la lista por fecha,
-
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          //*Date movie
-                          if (movie.mediaType == 'movie' && movie.releaseDate != null && movie.releaseDate!.year != 1900) ...[
-                            const Icon(Icons.calendar_month_outlined, size: 20),
-                            const SizedBox(width: 2),
-                            Text(
-                              '${movie.releaseDate!.year}',
-                              style: textStyle.bodySmall,
-                            ),
-                            const SizedBox(width: 15.0),
-                          ],
-
                           //*Date TV
-                          if (movie.mediaType == 'tv' && movie.firstAirDate != null && movie.firstAirDate!.year != 1900) ...[
+                          if (movie.firstAirDate != null && movie.firstAirDate!.year != 1900) ...[
                             const Icon(Icons.calendar_month_outlined, size: 20),
                             const SizedBox(width: 2),
                             Text(
@@ -409,10 +383,14 @@ class _CombinedCreditsByActor extends ConsumerWidget {
               }),
         ),
 
+        Padding(
+          padding: const EdgeInsets.only(left: 20, bottom: 3),
+          child: Text('Crew', style: textStyle.titleLarge),
+        ),
 
         //Crew
         SizedBox(
-          height: 300,
+          height: 290,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: crew!.length,
@@ -448,6 +426,43 @@ class _CombinedCreditsByActor extends ConsumerWidget {
                         maxLines: 2,
                         style: const TextStyle(overflow: TextOverflow.ellipsis),
                       ),
+
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        //*Date TV
+                        if (movie.mediaType == 'movie' && movie.releaseDate != null && movie.releaseDate!.year != 1900) ...[
+                          const Icon(Icons.calendar_month_outlined, size: 20),
+                          const SizedBox(width: 2),
+                          Text(
+                            '${movie.releaseDate!.year}',
+                            style: textStyle.bodySmall,
+                          ),
+                          const SizedBox(width: 15.0),
+                        ],
+
+                        //*Date TV
+                        if (movie.mediaType == 'tv' && movie.firstAirDate != null && movie.firstAirDate!.year != 1900) ...[
+                          const Icon(Icons.calendar_month_outlined, size: 20),
+                          const SizedBox(width: 2),
+                          Text(
+                            '${movie.firstAirDate!.year}',
+                            style: textStyle.bodySmall,
+                          ),
+                          const SizedBox(width: 15.0),
+                        ],
+
+                        //* Rating
+                        if (movie.voteCount > 0) ...[
+                          Icon(Icons.star_half_rounded, color: Colors.yellow.shade800, size: 20),
+                          const SizedBox(width: 2),
+                          Text(
+                            HumanFormats.number(movie.voteAverage, 2),
+                            style: textStyle.bodySmall!.copyWith(color: Colors.yellow.shade800),
+                          )
+                        ]
+                      ],
+                    )
                   ]),
                 );
               }),

@@ -120,7 +120,7 @@ class MoviedbDatasource extends MovieDatasource {
 
     // response.data['results']['ES']['link'] = response.data['id'];
 
-    WatchProvidersResponse moviedbProvidersReponse = WatchProvidersResponse.fromJson(response.data['results']['ES']);
+    final WatchProvidersResponse moviedbProvidersReponse = WatchProvidersResponse.fromJson(response.data['results']['ES']);
 
     Map<String, List<WatchProvider>> watchProviders = {};
 
