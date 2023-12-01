@@ -15,3 +15,9 @@ export 'storage/favorites_movies_provider.dart';
 
 export 'watch_providers/watch_provider_by_movie_provider.dart';
 export 'watch_providers/watch_provider_repository_provider.dart';
+
+export 'tv/tv_provider.dart';
+export 'tv/tv_repository_provider.dart';
+export 'tv/tv_slideshow_provider.dart';
+export 'tv/tv_initial_loading_provider.dart';
+export 'tv/tv_info_provider.dart';

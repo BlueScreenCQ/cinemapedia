@@ -8,10 +8,7 @@ class HomeScreen extends StatefulWidget {
   static const name = 'home-screen';
   final int pageIndex;
 
-  const HomeScreen({
-    super.key, 
-    required this.pageIndex
-  });
+  const HomeScreen({super.key, required this.pageIndex});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -19,15 +16,12 @@ class HomeScreen extends StatefulWidget {
 
 //* Este Mixin es necesario para mantener el estado en el PageView
 class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
-
   late PageController pageController;
 
   @override
   void initState() {
     super.initState();
-    pageController = PageController(
-      keepPage: true
-    );
+    pageController = PageController(keepPage: true);
   }
 
   @override
@@ -38,37 +32,32 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   final viewRoutes = const <Widget>[
     HomeView(),
-    SizedBox(), //TODO CAMBIAR POR SERIES
+    SeriesView(), //TODO CAMBIAR POR SERIES
     FavoritesView()
   ];
 
   @override
   Widget build(BuildContext context) {
-    
     super.build(context);
 
-    if ( pageController.hasClients ) {
+    if (pageController.hasClients) {
       pageController.animateToPage(
-        widget.pageIndex, 
-        curve: Curves.easeInOut, 
-        duration: const Duration( milliseconds: 250),
+        widget.pageIndex,
+        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 250),
       );
     }
-    
+
     return Scaffold(
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         children: viewRoutes,
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: widget.pageIndex
-        ),
+      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: widget.pageIndex),
     );
   }
-  
+
   @override
   bool get wantKeepAlive => true;
 }
-
-

@@ -1,46 +1,46 @@
+import 'package:flutter/material.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:cinemapedia/presentation/widgets/movies/similar_movies.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_gradient.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_read_more_text.dart';
 import 'package:cinemapedia/presentation/widgets/videos/videos_from_movie.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/crew.dart';
-import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/tv.dart';
 import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:animate_do/animate_do.dart';
 
 import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:go_router/go_router.dart';
 
-class MovieScreen extends ConsumerStatefulWidget {
-  static const name = 'movie-screen';
+class TVScreen extends ConsumerStatefulWidget {
+  static const name = 'tv-screen';
 
-  final String movieId;
+  final String tvId;
 
-  const MovieScreen({super.key, required this.movieId});
+  const TVScreen({super.key, required this.tvId});
 
   @override
-  MovieScreenState createState() => MovieScreenState();
+  TVScreenState createState() => TVScreenState();
 }
 
-class MovieScreenState extends ConsumerState<MovieScreen> {
+class TVScreenState extends ConsumerState<TVScreen> {
   @override
   void initState() {
     super.initState();
 
-    ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
-    ref.read(actorsByMovieProvider.notifier).loadActors(widget.movieId);
-    ref.read(watchProviderByMovieProvider.notifier).loadWatchProviders(widget.movieId);
+    ref.read(tvInfoProvider.notifier).loadTV(widget.tvId);
+    // ref.read(actorsByMovieProvider.notifier).loadActors(widget.tvId);
+    // ref.read(watchProviderByMovieProvider.notifier).loadWatchProviders(widget.tvId);
   }
 
   @override
   Widget build(BuildContext context) {
     //El Map está en el provider y va a mantener los datos de las pelis que ya se han consultado
-    final Movie? movie = ref.watch(movieInfoProvider)[widget.movieId];
+    final TV? tv = ref.watch(tvInfoProvider)[widget.tvId];
 
-    if (movie == null) {
+    if (tv == null) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator(strokeWidth: 2)),
       );
@@ -49,20 +49,20 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     return Scaffold(
       body: CustomScrollView(
         physics: const ClampingScrollPhysics(),
-        slivers: [_CustomSliverAppbar(movie: movie), SliverList(delegate: SliverChildBuilderDelegate((context, index) => _MovieDetails(movie: movie), childCount: 1))],
+        slivers: [_CustomSliverAppbar(tv: tv), SliverList(delegate: SliverChildBuilderDelegate((context, index) => _TVDetails(tv: tv), childCount: 1))],
       ),
     );
   }
 }
 
 class _CustomSliverAppbar extends ConsumerWidget {
-  final Movie movie;
+  final TV tv;
 
-  const _CustomSliverAppbar({required this.movie});
+  const _CustomSliverAppbar({required this.tv});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
+    final isFavoriteFuture = ref.watch(isFavoriteProvider(tv.id));
 
     final size = MediaQuery.of(context).size;
 
@@ -72,15 +72,16 @@ class _CustomSliverAppbar extends ConsumerWidget {
       foregroundColor: Colors.white,
       actions: [
         IconButton(
-          onPressed: () async {
-            // await ref.watch(localStorageRepositoryProvider)
-            //   .toggleFavorite(movie);
+          onPressed: () {},
+          // onPressed: () async {
+          //   // await ref.watch(localStorageRepositoryProvider)
+          //   //   .toggleFavorite(movie);
 
-            await ref.read(favoriteMoviesProvider.notifier).toggleFavorite(movie);
+          //   await ref.read(favoriteMoviesProvider.notifier).toggleFavorite(tv); //TODO ARREGLAR
 
-            //Esto invalida el estado actual del provider y lo vuelve a consultar
-            ref.invalidate(isFavoriteProvider(movie.id));
-          },
+          //   //Esto invalida el estado actual del provider y lo vuelve a consultar
+          //   ref.invalidate(isFavoriteProvider(tv.id));
+          // },
           icon: isFavoriteFuture.when(
             loading: () => const CircularProgressIndicator(
               strokeWidth: 2.0,
@@ -104,7 +105,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
           children: [
             SizedBox.expand(
               child: Image.network(
-                movie.posterPath,
+                tv.posterPath,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress != null) return const SizedBox();
@@ -137,10 +138,10 @@ class _CustomSliverAppbar extends ConsumerWidget {
   }
 }
 
-class _MovieDetails extends StatelessWidget {
-  final Movie movie;
+class _TVDetails extends StatelessWidget {
+  final TV tv;
 
-  const _MovieDetails({required this.movie});
+  const _TVDetails({required this.tv});
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +161,7 @@ class _MovieDetails extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
-                    movie.posterPath,
+                    tv.posterPath,
                     width: size.width * 0.3,
                   ),
                 ),
@@ -176,33 +177,88 @@ class _MovieDetails extends StatelessWidget {
                     children: [
                       Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
                       const SizedBox(width: 2),
-                      Text(movie.voteAverage.toStringAsPrecision(2), style: textStyle.titleMedium?.copyWith(color: Colors.yellow.shade800)),
+                      Text(tv.voteAverage.toStringAsPrecision(2), style: textStyle.titleMedium?.copyWith(color: Colors.yellow.shade800)),
                       // const Spacer(),
                       const SizedBox(width: 15.0),
-                      Text(HumanFormats.number(movie.popularity), style: textStyle.titleMedium),
+                      Text(HumanFormats.number(tv.popularity), style: textStyle.titleMedium),
                     ],
+                  ),
+                ),
+
+                //Fecha de estreno
+                if (tv.firstAirDate != null)
+                  SizedBox(
+                    width: 120,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.calendar_month_outlined,
+                          color: Colors.green,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          '${tv.firstAirDate!.day.toString().padLeft(2, '0')}/${tv.firstAirDate!.month.toString().padLeft(2, '0')}/${tv.firstAirDate!.year.toString().padLeft(4, '0')}',
+                          style: textStyle.titleMedium,
+                          maxLines: 2,
+                          // textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                //Fecha de fin
+                if (tv.lastAirDate != null)
+                  SizedBox(
+                    width: 120,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.calendar_month_outlined,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          '${tv.lastAirDate!.day.toString().padLeft(2, '0')}/${tv.lastAirDate!.month.toString().padLeft(2, '0')}/${tv.lastAirDate!.year.toString().padLeft(4, '0')}',
+                          style: textStyle.titleMedium,
+                          maxLines: 2,
+                          // textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    'Idioma original: ${tv.originalLanguage.toUpperCase()}',
+                    style: textStyle.titleSmall,
+                    textAlign: TextAlign.start,
                   ),
                 ),
 
                 SizedBox(
                   width: 120,
                   child: Text(
-                    'Idioma original: ${movie.originalLanguage.toUpperCase()}',
+                    'Nº temporadas: ${tv.numberOfSeasons}',
                     style: textStyle.titleSmall,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                   ),
                 ),
 
-                //Fecha de estreno
-                if (movie.releaseDate != null)
-                  SizedBox(
-                    width: 120,
-                    child: Text(
-                      '${movie.releaseDate!.day.toString().padLeft(2, '0')}/${movie.releaseDate!.month.toString().padLeft(2, '0')}/${movie.releaseDate!.year.toString().padLeft(4, '0')}',
-                      style: textStyle.titleMedium,
-                      textAlign: TextAlign.center,
-                    ),
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    'Nº episodios: ${tv.numberOfEpisodes}',
+                    style: textStyle.titleSmall,
+                    textAlign: TextAlign.start,
                   ),
+                ),
               ],
             ),
             const SizedBox(width: 10),
@@ -211,12 +267,12 @@ class _MovieDetails extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(movie.title, style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
-                  if (movie.title != movie.originalTitle) Text(movie.originalTitle, style: textStyle.titleMedium!.copyWith(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+                  Text(tv.name, style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
+                  if (tv.name != tv.originalName) Text(tv.originalName, style: textStyle.titleMedium!.copyWith(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
                   const SizedBox(height: 3.0),
                   // Text(movie.overview),
                   CustomReadMoreText(
-                    text: movie.overview,
+                    text: tv.overview,
                     trimLines: 8,
                   ),
                 ],
@@ -225,16 +281,17 @@ class _MovieDetails extends StatelessWidget {
           ]),
         ),
 
-        //PLATAFORMAS//
-        _WatchProvidersByMovie(movieID: movie.id.toString()),
-        //PLATAFORMAS//
+        //PLATAFORMAS
+        // _WatchProvidersByMovie(movieID: tv.id.toString()),
+        //PLATAFORMAS
 
+        //*Géneros
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Wrap(
             alignment: WrapAlignment.spaceBetween,
             children: [
-              ...movie.genreIds.map((gender) => Container(
+              ...tv.genreIds.map((gender) => Container(
                     margin: const EdgeInsets.only(right: 10),
                     child: Chip(
                       label: Text(gender),
@@ -245,13 +302,13 @@ class _MovieDetails extends StatelessWidget {
           ),
         ),
 
-        _ActorsByMovie(movieID: movie.id.toString()),
+        _ActorsByMovie(movieID: tv.id.toString()),
 
         //* Videos de la película (si tiene)
-        VideosFromMovie(movieId: movie.id),
+        // VideosFromMovie(movieId: tv.id),
 
         //* Películas similares
-        SimilarMovies(movieId: movie.id),
+        // SimilarMovies(movieId: tv.id),
 
         // const SizedBox(height: 50)
       ],

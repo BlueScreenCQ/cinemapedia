@@ -1,48 +1,50 @@
+import 'package:cinemapedia/presentation/providers/tv/tv_initial_loading_provider.dart';
+import 'package:cinemapedia/presentation/providers/tv/tv_provider.dart';
+import 'package:cinemapedia/presentation/providers/tv/tv_slideshow_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../providers/providers.dart';
 import '../../widgets/widgets.dart';
 
-class HomeView extends ConsumerStatefulWidget {
-  const HomeView({super.key});
+class SeriesView extends ConsumerStatefulWidget {
+  const SeriesView({super.key});
 
   @override
-  HomeViewState createState() => HomeViewState();
+  SeriesViewState createState() => SeriesViewState();
 }
 
-class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClientMixin {
+class SeriesViewState extends ConsumerState<SeriesView> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
 
-    ref.read(nowPlayingProvider.notifier).loadNextPage();
-    ref.read(trendingProvider.notifier).loadNextPage();
-    ref.read(topRatedProvider.notifier).loadNextPage();
-    ref.read(upcomingProvider.notifier).loadNextPage();
+    ref.read(airingTodayProvider.notifier).loadNextPage();
+    ref.read(onTheAirProvider.notifier).loadNextPage();
+    ref.read(popularProvider.notifier).loadNextPage();
+    ref.read(topRatedtvProvider.notifier).loadNextPage();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
-    final initialLoading = ref.watch(initialLoadingProvider);
+    final initialLoading = ref.watch(tvLoadingProvider);
 
     if (initialLoading) return const FullScreenLoader();
 
     //CARGA INICIAL//
 
-    final slideshowMovies = ref.watch(moviesSlideshowProvider);
-    final nowPlayingMovies = ref.watch(nowPlayingProvider);
-    final trendingMovies = ref.watch(trendingProvider);
-    final upcomingMovies = ref.watch(upcomingProvider);
-    final topRatedMovies = ref.watch(topRatedProvider);
+    final slideshowSeries = ref.watch(tvSlideshowProvider);
+    final nowPlayingMovies = ref.watch(airingTodayProvider);
+    final trendingMovies = ref.watch(onTheAirProvider);
+    final upcomingMovies = ref.watch(popularProvider);
+    final topRatedMovies = ref.watch(topRatedtvProvider);
 
     return CustomScrollView(slivers: [
       const SliverAppBar(
         floating: true,
         flexibleSpace: FlexibleSpaceBar(
-          title: CustomAppBar('home'),
+          title: CustomAppBar('tv'),
           titlePadding: EdgeInsets.zero,
         ),
       ),
@@ -52,21 +54,21 @@ class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClien
           children: [
             // const CustomAppBar(),
 
-            MoviesSlideshow(movies: slideshowMovies),
+            MoviesSlideshow(movies: slideshowSeries),
 
             MovieHorizontalListview(
               movies: nowPlayingMovies,
-              title: 'En cines',
+              title: 'Se emite hoy',
               // subTitle: 'Lunes 20',
               showDate: true,
-              loadNextPage: () => ref.read(nowPlayingProvider.notifier).loadNextPage(),
+              loadNextPage: () => ref.read(airingTodayProvider.notifier).loadNextPage(),
             ),
             MovieHorizontalListview(
               movies: upcomingMovies,
-              title: 'Próximamente',
+              title: 'Series en emisión',
               // subTitle: 'Desde hoy',
               showDate: true,
-              loadNextPage: () => ref.read(upcomingProvider.notifier).loadNextPage(),
+              loadNextPage: () => ref.read(onTheAirProvider.notifier).loadNextPage(),
             ),
             MovieHorizontalListview(
               movies: trendingMovies,
@@ -74,7 +76,7 @@ class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClien
               showDate: true,
               onlyYear: false,
               // subTitle: '',
-              loadNextPage: () => ref.read(trendingProvider.notifier).loadNextPage(),
+              loadNextPage: () => ref.read(popularProvider.notifier).loadNextPage(),
             ),
             MovieHorizontalListview(
               movies: topRatedMovies,
@@ -82,7 +84,7 @@ class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClien
               // subTitle: 'Desde siempre',
               showDate: true,
               onlyYear: true,
-              loadNextPage: () => ref.read(topRatedProvider.notifier).loadNextPage(),
+              loadNextPage: () => ref.read(topRatedtvProvider.notifier).loadNextPage(),
             ),
             const SizedBox(height: 20)
           ],

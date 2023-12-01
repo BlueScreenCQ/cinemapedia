@@ -12,18 +12,10 @@ class MovieHorizontalListview extends StatefulWidget {
   final bool? showDate;
   final bool? onlyYear;
 
-  const MovieHorizontalListview(
-      {super.key,
-      required this.movies,
-      this.title,
-      this.subTitle,
-      this.loadNextPage,
-      this.showDate = false,
-      this.onlyYear = false});
+  const MovieHorizontalListview({super.key, required this.movies, this.title, this.subTitle, this.loadNextPage, this.showDate = false, this.onlyYear = false});
 
   @override
-  State<MovieHorizontalListview> createState() =>
-      _MovieHorizontalListviewState();
+  State<MovieHorizontalListview> createState() => _MovieHorizontalListviewState();
 }
 
 class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
@@ -36,8 +28,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
     scrollController.addListener(() {
       if (widget.loadNextPage == null) return;
 
-      if ((scrollController.position.pixels + 200) >=
-          scrollController.position.maxScrollExtent) {
+      if ((scrollController.position.pixels + 200) >= scrollController.position.maxScrollExtent) {
         widget.loadNextPage!();
       }
     });
@@ -57,8 +48,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
       height: 350,
       child: Column(
         children: [
-          if (widget.title != null || widget.subTitle != null)
-            _Title(title: widget.title, subTitle: widget.subTitle),
+          if (widget.title != null || widget.subTitle != null) _Title(title: widget.title, subTitle: widget.subTitle),
           const SizedBox(height: 5.0),
           Expanded(
               child: ListView.builder(
@@ -67,11 +57,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) {
-              return FadeInRight(
-                  child: _Slide(
-                      movie: widget.movies[index],
-                      showDate: widget.showDate,
-                      onlyYear: widget.onlyYear));
+              return FadeInRight(child: _Slide(movie: widget.movies[index], showDate: widget.showDate, onlyYear: widget.onlyYear));
             },
           ))
         ],
@@ -85,88 +71,86 @@ class _Slide extends StatelessWidget {
   final bool? showDate;
   final bool? onlyYear;
 
-  const _Slide(
-      {required this.movie, this.showDate = false, this.onlyYear = false});
+  const _Slide({required this.movie, this.showDate = false, this.onlyYear = false});
 
   @override
   Widget build(BuildContext context) {
     final textStyles = Theme.of(context).textTheme;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //* Imagen
-          SizedBox(
-            width: 150,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                movie.posterPath,
-                fit: BoxFit.cover,
-                width: 150,
-                height: 230,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) {
-                    return const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Center(
-                          child: CircularProgressIndicator(strokeWidth: 2)),
-                    );
-                  }
-                  return GestureDetector(
-                      onTap: () => context.push('/home/0/movie/${movie.id}'),
-                      child: FadeIn(child: child));
-                },
+    return GestureDetector(
+      onTap: () => (movie.mediaType == 'movie') ? context.push('/home/0/movie/${movie.id}') : context.push('/home/0/tv/${movie.id}'),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //* Imagen
+            SizedBox(
+              width: 150,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.network(
+                  movie.posterPath,
+                  fit: BoxFit.cover,
+                  width: 150,
+                  height: 230,
+                  // loadingBuilder: (context, child, loadingProgress) {
+                  //   if (loadingProgress != null) {
+                  //     return const Padding(
+                  //       padding: EdgeInsets.all(8.0),
+                  //       child: Center(
+                  //           child: CircularProgressIndicator(strokeWidth: 2)),
+                  //     );
+                  //   }
+                  //   return GestureDetector(
+                  //       onTap: () => context.push('/home/0/movie/${movie.id}'),
+                  //       child: FadeIn(child: child));
+                  // },
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(height: 5),
+            const SizedBox(height: 5),
 
-          //* Title
-          SizedBox(
-            width: 150,
-            child: Text(
-              movie.title,
-              maxLines: 1,
-              style: textStyles.titleSmall,
-              overflow: TextOverflow.ellipsis,
+            //* Title
+            SizedBox(
+              width: 150,
+              child: Text(
+                movie.title,
+                maxLines: 1,
+                style: textStyles.titleSmall,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              if (showDate == true)
-                if (movie.releaseDate != null) ...[
-                  const Icon(Icons.calendar_month_outlined, size: 20),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                if (showDate == true)
+                  if (movie.releaseDate != null) ...[
+                    const Icon(Icons.calendar_month_outlined, size: 20),
+                    const SizedBox(width: 2),
+                    Text(
+                      onlyYear == true ? '${movie.releaseDate!.year}' : HumanFormats.fechaCorta(movie.releaseDate!),
+                      style: textStyles.bodySmall,
+                    ),
+                    const SizedBox(width: 15.0),
+                  ],
+
+                //* Rating
+
+                if (movie.voteCount > 0) ...[
+                  Icon(Icons.star_half_rounded, color: Colors.yellow.shade800, size: 20),
                   const SizedBox(width: 2),
                   Text(
-                    onlyYear == true
-                        ? '${movie.releaseDate!.year}'
-                        : HumanFormats.fechaCorta(movie.releaseDate!),
-                    style: textStyles.bodySmall,
-                  ),
-                  const SizedBox(width: 15.0),
-                ],
-
-              //* Rating
-
-              if (movie.voteCount > 0) ...[
-                Icon(Icons.star_half_rounded,
-                    color: Colors.yellow.shade800, size: 20),
-                const SizedBox(width: 2),
-                Text(
-                  HumanFormats.number(movie.voteAverage, 2),
-                  style: textStyles.bodySmall!
-                      .copyWith(color: Colors.yellow.shade800),
-                )
-              ]
-            ],
-          )
-        ],
+                    HumanFormats.number(movie.voteAverage, 2),
+                    style: textStyles.bodySmall!.copyWith(color: Colors.yellow.shade800),
+                  )
+                ]
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -189,11 +173,7 @@ class _Title extends StatelessWidget {
         children: [
           if (title != null) Text(title!, style: titleStyle),
           const Spacer(),
-          if (subTitle != null)
-            FilledButton.tonal(
-                style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                onPressed: () {},
-                child: Text(subTitle!))
+          if (subTitle != null) FilledButton.tonal(style: const ButtonStyle(visualDensity: VisualDensity.compact), onPressed: () {}, child: Text(subTitle!))
         ],
       ),
     );

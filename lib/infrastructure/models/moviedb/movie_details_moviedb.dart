@@ -1,4 +1,30 @@
 class MovieDetails {
+  final bool adult;
+  final String backdropPath;
+  final BelongsToCollection? belongsToCollection;
+  final int budget; //TODO Añadir
+  final List<Genre> genres;
+  final String homepage;
+  final int id;
+  final String imdbId;
+  final String originalLanguage;
+  final String originalTitle;
+  final String overview;
+  final double popularity;
+  final String posterPath;
+  final List<ProductionCompany> productionCompanies;
+  final List<ProductionCountry> productionCountries;
+  final DateTime releaseDate;
+  final int revenue; //TODO Añadir
+  final int runtime;
+  final List<SpokenLanguage> spokenLanguages;
+  final String status;
+  final String tagline;
+  final String title;
+  final bool video;
+  final double voteAverage;
+  final int voteCount;
+
   MovieDetails({
     required this.adult,
     required this.backdropPath,
@@ -27,32 +53,6 @@ class MovieDetails {
     required this.voteCount,
   });
 
-  final bool adult;
-  final String backdropPath;
-  final BelongsToCollection? belongsToCollection;
-  final int budget; //TODO Añadir
-  final List<Genre> genres;
-  final String homepage;
-  final int id;
-  final String imdbId;
-  final String originalLanguage;
-  final String originalTitle;
-  final String overview;
-  final double popularity;
-  final String posterPath;
-  final List<ProductionCompany> productionCompanies;
-  final List<ProductionCountry> productionCountries;
-  final DateTime releaseDate;
-  final int revenue; //TODO Añadir
-  final int runtime;
-  final List<SpokenLanguage> spokenLanguages;
-  final String status;
-  final String tagline;
-  final String title;
-  final bool video;
-  final double voteAverage;
-  final int voteCount;
-
   factory MovieDetails.fromJson(Map<String, dynamic> json) => MovieDetails(
         adult: json["adult"],
         backdropPath: json["backdrop_path"] ?? '',
@@ -63,7 +63,7 @@ class MovieDetails {
         id: json["id"],
         imdbId: json["imdb_id"],
         originalLanguage: json["original_language"],
-        originalTitle: json["original_title"],
+        originalTitle: json["original_title"] ?? json["original_name"],
         overview: json["overview"],
         popularity: json["popularity"]?.toDouble(),
         posterPath: json["poster_path"],
