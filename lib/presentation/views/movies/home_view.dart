@@ -28,7 +28,7 @@ class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClien
 
     final initialLoading = ref.watch(initialLoadingProvider);
 
-    if (initialLoading) return const FullScreenLoader();
+    if (initialLoading) return const FullScreenLoader(pageName: 'home');
 
     //CARGA INICIAL//
 

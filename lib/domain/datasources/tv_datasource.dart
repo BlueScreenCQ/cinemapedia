@@ -14,7 +14,7 @@ abstract class TVDatasource {
 
   Future<TV> getTvById(String id);
 
-  // Future<List<Movie>> searchMovies(String query);
+  Future<List<Movie>> searchTV(String query);
 
   // Future<List<Movie>> getSimilarMovies(int movieId);
 

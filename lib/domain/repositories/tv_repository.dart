@@ -1,8 +1,9 @@
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/tv.dart';
 import 'package:cinemapedia/domain/entities/video.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 
-abstract class MovieRepository {
+abstract class TVRepository {
   Future<List<Movie>> getAiringToday({int page = 1});
 
   Future<List<Movie>> getOnTheAir({int page = 1});
@@ -11,9 +12,9 @@ abstract class MovieRepository {
 
   Future<List<Movie>> getTopRated({int page = 1});
 
-  Future<Movie> getTvById(String id);
+  Future<TV> getTvById(String id);
 
-  // Future<List<Movie>> searchMovies(String query);
+  Future<List<Movie>> searchTV(String query);
 
   // Future<List<Movie>> getSimilarMovies(int movieId);
 

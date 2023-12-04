@@ -2,7 +2,6 @@ import 'package:cinemapedia/domain/datasources/tv_datasource.dart';
 import 'package:cinemapedia/domain/entities/tv.dart';
 import 'package:cinemapedia/infrastructure/mappers/movie_mapper.dart';
 import 'package:cinemapedia/infrastructure/mappers/tv_mapper.dart';
-import 'package:cinemapedia/infrastructure/models/moviedb/movie_details_moviedb.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_response.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/tv_details_moviedb.dart';
 import 'package:dio/dio.dart';
@@ -76,13 +75,13 @@ class TVMoviedbDatasource extends TVDatasource {
     return tv;
   }
 
-  // @override
-  // Future<List<Movie>> searchMovies(String query) async {
-  //   if (query.isEmpty) return [];
+  @override
+  Future<List<Movie>> searchTV(String query) async {
+    if (query.isEmpty) return [];
 
-  //   final response = await dio.get('/search/movie', queryParameters: {'query': query});
-  //   return _jsonToMovies(response.data);
-  // }
+    final response = await dio.get('/search/tv', queryParameters: {'query': query});
+    return _jsonToMovies(response.data);
+  }
 
   // @override
   // Future<List<Movie>> getSimilarMovies(int movieId) async {

@@ -30,7 +30,7 @@ class SeriesViewState extends ConsumerState<SeriesView> with AutomaticKeepAliveC
 
     final initialLoading = ref.watch(tvLoadingProvider);
 
-    if (initialLoading) return const FullScreenLoader();
+    if (initialLoading) return const FullScreenLoader(pageName: 'tv');
 
     //CARGA INICIAL//
 

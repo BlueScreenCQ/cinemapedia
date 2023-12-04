@@ -1,6 +1,7 @@
+import 'package:cinemapedia/presentation/providers/search/search_tv_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cinemapedia/presentation/delegates/search_movie_delegate.dart';
+import 'package:cinemapedia/presentation/delegates/search_delegate.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:go_router/go_router.dart';
@@ -32,18 +33,35 @@ class CustomAppBar extends ConsumerWidget {
                   const Spacer(),
                   IconButton(
                       onPressed: () {
-                        final searchedMovies = ref.read(searchedMoviesProvider);
-                        final searchQuery = ref.read(searchQueryProvider);
+                        if (pageName == 'home') {
+                          final searchedMovies = ref.read(searchedMoviesProvider);
+                          final searchQuery = ref.read(searchQueryProvider);
 
-                        showSearch<Movie?>(
-                                query: searchQuery,
-                                context: context,
-                                delegate: SearchMovieDelegate(initialMovies: searchedMovies, searchMovies: ref.read(searchedMoviesProvider.notifier).searchMoviesByQuery))
-                            .then((movie) {
-                          if (movie != null) {
-                            context.push('/home/0/movie/${movie.id}');
-                          }
-                        });
+                          showSearch<Movie?>(
+                                  query: searchQuery,
+                                  context: context,
+                                  delegate: SearchMovieDelegate(initialMovies: searchedMovies, searchMovies: ref.read(searchedMoviesProvider.notifier).searchMoviesByQuery))
+                              .then((movie) {
+                            if (movie != null) {
+                              context.push('/home/0/movie/${movie.id}');
+                            }
+                          });
+                        }
+
+                        if (pageName == 'tv') {
+                          final searchedTV = ref.read(searchedTVProvider);
+                          final searchQuery = ref.read(searchTVQueryProvider);
+
+                          showSearch<Movie?>(
+                                  query: searchQuery,
+                                  context: context,
+                                  delegate: SearchMovieDelegate(initialMovies: searchedTV, searchMovies: ref.read(searchedTVProvider.notifier).searchMoviesByQuery, esTv: true))
+                              .then((movie) {
+                            if (movie != null) {
+                              context.push('/home/0/tv/${movie.id}');
+                            }
+                          });
+                        }
                       },
                       icon: const Icon(Icons.search))
                 ],

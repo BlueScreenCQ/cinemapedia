@@ -1,8 +1,9 @@
 import 'package:cinemapedia/domain/datasources/tv_datasource.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/domain/entities/tv.dart';
+import 'package:cinemapedia/domain/repositories/tv_repository.dart';
 
-class TVRepositoryImpl extends TVDatasource {
+class TVRepositoryImpl extends TVRepository {
   final TVDatasource datasource;
   TVRepositoryImpl(this.datasource);
 
@@ -31,10 +32,10 @@ class TVRepositoryImpl extends TVDatasource {
     return datasource.getTvById(id);
   }
 
-  // @override
-  // Future<List<Movie>> searchMovies(String query) {
-  //   return datasource.searchMovies(query);
-  // }
+  @override
+  Future<List<Movie>> searchTV(String query) {
+    return datasource.searchTV(query);
+  }
 
   // @override
   // Future<List<Movie>> getSimilarMovies(int movieId) {
