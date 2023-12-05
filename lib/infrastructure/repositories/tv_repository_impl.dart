@@ -13,8 +13,8 @@ class TVRepositoryImpl extends TVRepository {
   }
 
   @override
-  Future<List<Movie>> getOnTheAir({int page = 1}) {
-    return datasource.getOnTheAir(page: page);
+  Future<List<Movie>> getTrendingTv({int page = 1}) {
+    return datasource.getTrendingTv(page: page);
   }
 
   @override

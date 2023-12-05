@@ -19,7 +19,7 @@ class SeriesViewState extends ConsumerState<SeriesView> with AutomaticKeepAliveC
     super.initState();
 
     ref.read(airingTodayProvider.notifier).loadNextPage();
-    ref.read(onTheAirProvider.notifier).loadNextPage();
+    ref.read(tredingTVProvider.notifier).loadNextPage();
     ref.read(popularProvider.notifier).loadNextPage();
     ref.read(topRatedtvProvider.notifier).loadNextPage();
   }
@@ -35,10 +35,10 @@ class SeriesViewState extends ConsumerState<SeriesView> with AutomaticKeepAliveC
     //CARGA INICIAL//
 
     final slideshowSeries = ref.watch(tvSlideshowProvider);
-    final nowPlayingMovies = ref.watch(airingTodayProvider);
-    final trendingMovies = ref.watch(onTheAirProvider);
-    final upcomingMovies = ref.watch(popularProvider);
-    final topRatedMovies = ref.watch(topRatedtvProvider);
+    final airingTodayTV = ref.watch(airingTodayProvider);
+    final trendingTV = ref.watch(tredingTVProvider);
+    final popularTV = ref.watch(popularProvider);
+    final topRatedTV = ref.watch(topRatedtvProvider);
 
     return CustomScrollView(slivers: [
       const SliverAppBar(
@@ -57,29 +57,29 @@ class SeriesViewState extends ConsumerState<SeriesView> with AutomaticKeepAliveC
             MoviesSlideshow(movies: slideshowSeries),
 
             MovieHorizontalListview(
-              movies: nowPlayingMovies,
+              movies: airingTodayTV,
               title: 'Se emite hoy',
               // subTitle: 'Lunes 20',
               showDate: true,
               loadNextPage: () => ref.read(airingTodayProvider.notifier).loadNextPage(),
             ),
             MovieHorizontalListview(
-              movies: upcomingMovies,
-              title: 'Series en emisión',
+              movies: trendingTV,
+              title: 'En tendencia',
               // subTitle: 'Desde hoy',
               showDate: true,
-              loadNextPage: () => ref.read(onTheAirProvider.notifier).loadNextPage(),
+              loadNextPage: () => ref.read(tredingTVProvider.notifier).loadNextPage(),
             ),
             MovieHorizontalListview(
-              movies: trendingMovies,
-              title: 'En tendencia',
+              movies: popularTV,
+              title: 'Populares',
               showDate: true,
               onlyYear: false,
               // subTitle: '',
               loadNextPage: () => ref.read(popularProvider.notifier).loadNextPage(),
             ),
             MovieHorizontalListview(
-              movies: topRatedMovies,
+              movies: topRatedTV,
               title: 'Mejor valoradas',
               // subTitle: 'Desde siempre',
               showDate: true,

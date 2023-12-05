@@ -6,7 +6,7 @@ import 'package:cinemapedia/domain/entities/watch_provider.dart';
 abstract class TVRepository {
   Future<List<Movie>> getAiringToday({int page = 1});
 
-  Future<List<Movie>> getOnTheAir({int page = 1});
+  Future<List<Movie>> getTrendingTv({int page = 1});
 
   Future<List<Movie>> getPopular({int page = 1});
 

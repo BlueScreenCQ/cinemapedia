@@ -6,7 +6,7 @@ import 'package:cinemapedia/domain/entities/tv.dart';
 abstract class TVDatasource {
   Future<List<Movie>> getAiringToday({int page = 1});
 
-  Future<List<Movie>> getOnTheAir({int page = 1});
+  Future<List<Movie>> getTrendingTv({int page = 1});
 
   Future<List<Movie>> getPopular({int page = 1});
 

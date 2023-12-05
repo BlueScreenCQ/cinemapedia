@@ -8,8 +8,8 @@ final airingTodayProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>((
   return MoviesNotifier(fetchMoreMovies: fetchMoreMoves);
 });
 
-final onTheAirProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
-  final fetchMoreMoves = ref.watch(tvRepositoryProvider).getOnTheAir;
+final tredingTVProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
+  final fetchMoreMoves = ref.watch(tvRepositoryProvider).getTrendingTv;
   return MoviesNotifier(fetchMoreMovies: fetchMoreMoves);
 });
 

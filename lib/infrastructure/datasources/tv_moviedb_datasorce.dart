@@ -40,8 +40,8 @@ class TVMoviedbDatasource extends TVDatasource {
   }
 
   @override
-  Future<List<Movie>> getOnTheAir({int page = 1}) async {
-    final response = await dio.get('tv/on_the_air', queryParameters: {'page': page, 'timezone': 'ES'});
+  Future<List<Movie>> getTrendingTv({int page = 1}) async {
+    final response = await dio.get('trending/tv/day', queryParameters: {'page': page, 'timezone': 'ES'});
 
     return _jsonToMovies(response.data);
   }
@@ -56,9 +56,8 @@ class TVMoviedbDatasource extends TVDatasource {
   @override
   Future<List<Movie>> getPopular({int page = 1}) async {
     final response = await dio.get('/tv/popular', queryParameters: {'page': page});
-    List<Movie> upcomingMovies = _jsonToMovies(response.data);
 
-    return upcomingMovies;
+    return _jsonToMovies(response.data);
   }
 
   @override
