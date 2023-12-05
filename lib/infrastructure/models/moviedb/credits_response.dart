@@ -57,7 +57,7 @@ class Cast {
 
   factory Cast.fromJson(Map<String, dynamic> json) => Cast(
         adult: json["adult"] ?? false,
-        gender: json["gender"],
+        gender: json["gender"] ?? 0,
         id: json["id"],
         knownForDepartment: json["known_for_department"] ?? '',
         name: json["name"],

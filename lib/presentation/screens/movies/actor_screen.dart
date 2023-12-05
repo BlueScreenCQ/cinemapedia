@@ -329,7 +329,7 @@ class _CombinedCreditsByActor extends ConsumerWidget {
                 final Movie movie = tv[index];
 
                 return GestureDetector(
-                  // onTap: () => context.push('/home/0/movie/${movie.id}'),
+                  onTap: () => context.push('/home/0/tv/${movie.id}'),
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
                     width: 135,
@@ -397,73 +397,76 @@ class _CombinedCreditsByActor extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final Movie movie = crew[index];
 
-                return Container(
-                  padding: const EdgeInsets.all(8.0),
-                  width: 135,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    //Movie Poster
-                    MovieOrTVPoster(movie: movie),
+                return GestureDetector(
+                  onTap: (movie.mediaType == "movie") ? () => context.push('/home/0/moive/${movie.id}') : () => context.push('/home/0/tv/${movie.id}'),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: 135,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      //Movie Poster
+                      MovieOrTVPoster(movie: movie),
 
-                    const SizedBox(height: 5),
+                      const SizedBox(height: 5),
 
-                    //Name
-                    Text(
-                      (movie.mediaType == "movie") ? movie.title : movie.name!,
-                      maxLines: 2,
-                      style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                    ),
-
-                    if (movie.job != null && movie.job != "")
+                      //Name
                       Text(
-                        movie.job ?? '',
+                        (movie.mediaType == "movie") ? movie.title : movie.name!,
                         maxLines: 2,
-                        style: const TextStyle(overflow: TextOverflow.ellipsis),
+                        style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                       ),
 
-                    if (movie.department != null && movie.department != "")
-                      Text(
-                        '(${movie.department})',
-                        maxLines: 2,
-                        style: const TextStyle(overflow: TextOverflow.ellipsis),
-                      ),
+                      if (movie.job != null && movie.job != "")
+                        Text(
+                          movie.job ?? '',
+                          maxLines: 2,
+                          style: const TextStyle(overflow: TextOverflow.ellipsis),
+                        ),
 
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        //*Date TV
-                        if (movie.mediaType == 'movie' && movie.releaseDate != null && movie.releaseDate!.year != 1900) ...[
-                          const Icon(Icons.calendar_month_outlined, size: 20),
-                          const SizedBox(width: 2),
-                          Text(
-                            '${movie.releaseDate!.year}',
-                            style: textStyle.bodySmall,
-                          ),
-                          const SizedBox(width: 15.0),
+                      if (movie.department != null && movie.department != "")
+                        Text(
+                          '(${movie.department})',
+                          maxLines: 2,
+                          style: const TextStyle(overflow: TextOverflow.ellipsis),
+                        ),
+
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          //*Date TV
+                          if (movie.mediaType == 'movie' && movie.releaseDate != null && movie.releaseDate!.year != 1900) ...[
+                            const Icon(Icons.calendar_month_outlined, size: 20),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${movie.releaseDate!.year}',
+                              style: textStyle.bodySmall,
+                            ),
+                            const SizedBox(width: 15.0),
+                          ],
+
+                          //*Date TV
+                          if (movie.mediaType == 'tv' && movie.firstAirDate != null && movie.firstAirDate!.year != 1900) ...[
+                            const Icon(Icons.calendar_month_outlined, size: 20),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${movie.firstAirDate!.year}',
+                              style: textStyle.bodySmall,
+                            ),
+                            const SizedBox(width: 15.0),
+                          ],
+
+                          //* Rating
+                          if (movie.voteCount > 0) ...[
+                            Icon(Icons.star_half_rounded, color: Colors.yellow.shade800, size: 20),
+                            const SizedBox(width: 2),
+                            Text(
+                              HumanFormats.number(movie.voteAverage, 2),
+                              style: textStyle.bodySmall!.copyWith(color: Colors.yellow.shade800),
+                            )
+                          ]
                         ],
-
-                        //*Date TV
-                        if (movie.mediaType == 'tv' && movie.firstAirDate != null && movie.firstAirDate!.year != 1900) ...[
-                          const Icon(Icons.calendar_month_outlined, size: 20),
-                          const SizedBox(width: 2),
-                          Text(
-                            '${movie.firstAirDate!.year}',
-                            style: textStyle.bodySmall,
-                          ),
-                          const SizedBox(width: 15.0),
-                        ],
-
-                        //* Rating
-                        if (movie.voteCount > 0) ...[
-                          Icon(Icons.star_half_rounded, color: Colors.yellow.shade800, size: 20),
-                          const SizedBox(width: 2),
-                          Text(
-                            HumanFormats.number(movie.voteAverage, 2),
-                            style: textStyle.bodySmall!.copyWith(color: Colors.yellow.shade800),
-                          )
-                        ]
-                      ],
-                    )
-                  ]),
+                      )
+                    ]),
+                  ),
                 );
               }),
         ),

@@ -11,6 +11,7 @@ class MovieMovieDB {
     required this.posterPath,
     required this.releaseDate,
     required this.title,
+    required this.name,
     required this.video,
     required this.voteAverage,
     required this.voteCount,
@@ -27,6 +28,7 @@ class MovieMovieDB {
   final String posterPath;
   final DateTime? releaseDate;
   final String title;
+  final String? name;
   final bool video;
   final double voteAverage;
   final int voteCount;
@@ -43,6 +45,7 @@ class MovieMovieDB {
         posterPath: json["poster_path"] ?? '',
         releaseDate: json["release_date"] != null && json["release_date"].toString().isNotEmpty ? DateTime.parse(json["release_date"]) : null,
         title: json["title"] ?? json['name'],
+        name: json['name'] ?? '',
         video: json["video"] ?? false,
         voteAverage: json["vote_average"]?.toDouble(),
         voteCount: json["vote_count"],
