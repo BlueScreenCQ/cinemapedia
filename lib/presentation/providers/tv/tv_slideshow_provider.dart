@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/movie.dart';
 
 final tvSlideshowProvider = Provider<List<Movie>>((ref) {
-  final onAirSeries = ref.watch(airingTodayProvider);
+  final trendingSeries = ref.watch(tredingTVProvider);
 
-  if (onAirSeries.isEmpty) return [];
+  if (trendingSeries.isEmpty) return [];
 
-  return onAirSeries.sublist(0, 6);
+  return trendingSeries.sublist(0, 6);
 });

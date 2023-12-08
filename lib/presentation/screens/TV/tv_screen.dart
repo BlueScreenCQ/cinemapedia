@@ -1,9 +1,9 @@
+import 'package:cinemapedia/presentation/providers/watch_providers/watch_provider_by_tv_provider.dart';
+import 'package:cinemapedia/presentation/widgets/tv/season_expansion_panel_list.dart';
 import 'package:flutter/material.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
-import 'package:cinemapedia/presentation/widgets/movies/similar_movies.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_gradient.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_read_more_text.dart';
-import 'package:cinemapedia/presentation/widgets/videos/videos_from_movie.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/crew.dart';
@@ -32,7 +32,7 @@ class TVScreenState extends ConsumerState<TVScreen> {
 
     ref.read(tvInfoProvider.notifier).loadTV(widget.tvId);
     // ref.read(actorsByMovieProvider.notifier).loadActors(widget.tvId);
-    // ref.read(watchProviderByMovieProvider.notifier).loadWatchProviders(widget.tvId);
+    // ref.read(watchProviderByTvProvider.notifier).loadWatchProviders(widget.tvId);
   }
 
   @override
@@ -282,7 +282,7 @@ class _TVDetails extends StatelessWidget {
         ),
 
         //PLATAFORMAS
-        // _WatchProvidersByMovie(movieID: tv.id.toString()),
+        // _WatchProvidersByTv(movieID: tv.id.toString()),
         //PLATAFORMAS
 
         //*Géneros
@@ -302,7 +302,11 @@ class _TVDetails extends StatelessWidget {
           ),
         ),
 
-        _ActorsByMovie(movieID: tv.id.toString()),
+        if (tv.createdBy.isNotEmpty) _CreatedBy(tv: tv),
+
+        _Seasons(tv: tv),
+
+        // _ActorsByMovie(movieID: tv.id.toString()),
 
         //* Videos de la película (si tiene)
         // VideosFromMovie(movieId: tv.id),
@@ -310,19 +314,19 @@ class _TVDetails extends StatelessWidget {
         //* Películas similares
         // SimilarMovies(movieId: tv.id),
 
-        // const SizedBox(height: 50)
+        const SizedBox(height: 50)
       ],
     );
   }
 }
 
-class _WatchProvidersByMovie extends ConsumerWidget {
+class _WatchProvidersByTv extends ConsumerWidget {
   final String movieID;
-  const _WatchProvidersByMovie({required this.movieID});
+  const _WatchProvidersByTv({required this.movieID});
 
   @override
   Widget build(BuildContext context, ref) {
-    Map<String, List<WatchProvider>> providers = ref.watch(watchProviderByMovieProvider)[movieID] ?? {};
+    Map<String, List<WatchProvider>> providers = ref.watch(watchProviderByTvProvider)[movieID] ?? {};
 
     final textStyle = Theme.of(context).textTheme;
 
@@ -426,7 +430,7 @@ class _ActorsByMovie extends ConsumerWidget {
 
         Padding(
           padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
-          child: Text('Crew', style: textStyle.titleLarge),
+          child: Text('Equipo', style: textStyle.titleLarge),
         ),
 
         //Crew
@@ -479,6 +483,95 @@ class _ActorsByMovie extends ConsumerWidget {
               }),
         ),
       ],
+    );
+  }
+}
+
+class _CreatedBy extends StatelessWidget {
+  final TV tv;
+  const _CreatedBy({required this.tv});
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
+    if (tv.createdBy == null || tv.createdBy == []) return Container();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Text('Creada por', style: textStyle.titleLarge),
+        ),
+
+        //Crew
+        SizedBox(
+          height: 230,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: tv.createdBy.length,
+              itemBuilder: (context, index) {
+                final Crew item = tv.createdBy[index];
+
+                return GestureDetector(
+                  onTap: () => context.push('/home/0/actor/${item.id}'),
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 5.0, left: 8.0),
+                    width: 135,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      //Actor photo
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          item.profilePath!,
+                          height: 180,
+                          width: 135,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+
+                      const SizedBox(height: 5),
+
+                      //Name
+                      Text(
+                        item.name,
+                        maxLines: 2,
+                        style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                      ),
+                    ]),
+                  ),
+                );
+              }),
+        ),
+      ],
+    );
+  }
+}
+
+class _Seasons extends StatelessWidget {
+  final TV tv;
+
+  const _Seasons({required this.tv});
+
+  @override
+  Widget build(BuildContext context) {
+    if (tv.seasons == null || tv.seasons == []) return Container();
+
+    // return Text(tv.seasons[0].name);
+
+    // return SizedBox(
+    //   height: 300,
+    //   child: ListView.builder(
+    //     itemCount: tv.seasons.length,
+    //     itemBuilder: (BuildContext context, int i) {
+    //       return Text(tv.seasons[i].name);
+    //     },
+    //   ),
+    // );
+
+    return SeasonExpansionPanelList(
+      seasons: tv.seasons,
     );
   }
 }

@@ -12,9 +12,9 @@ class TvResponse {
   final int id;
   final bool inProduction;
   final List<String> languages;
-  // final Episode lastEpisodeToAir;
+  // final EpisodeResponse lastEpisodeToAir;
   final String name;
-  // final Episode nextEpisodeToAir;
+  // final EpisodeResponse nextEpisodeToAir;
   final List<ProductionCompany> networks;
   final int numberOfEpisodes;
   final int numberOfSeasons;
@@ -74,8 +74,8 @@ class TvResponse {
         backdropPath: json["backdrop_path"] ?? '',
         createdBy: List<Cast>.from(json["created_by"].map((x) => Cast.fromJson(x))),
         episodeRunTime: List<int>.from(json["episode_run_time"].map((x) => x)),
-        firstAirDate: (json["first_air_date"] != null) ? DateTime.parse(json["first_air_date"]) : null,
-        lastAirDate: (json["last_air_date"] != null) ? DateTime.parse(json["last_air_date"]) : null,
+        firstAirDate: (json["first_air_date"] != null && json["first_air_date"] != "") ? DateTime.parse(json["first_air_date"]) : null,
+        lastAirDate: (json["last_air_date"] != null && json["last_air_date"] != "") ? DateTime.parse(json["last_air_date"]) : null,
         genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
         homepage: json["homepage"],
         id: json["id"],
@@ -140,37 +140,37 @@ class TvResponse {
       };
 }
 
-class CreatedBy {
-  final int id;
-  final String creditId;
-  final String name;
-  final int gender;
-  final String profilePath;
+// class CreatedBy {
+//   final int id;
+//   final String creditId;
+//   final String name;
+//   final int gender;
+//   final String profilePath;
 
-  CreatedBy({
-    required this.id,
-    required this.creditId,
-    required this.name,
-    required this.gender,
-    required this.profilePath,
-  });
+//   CreatedBy({
+//     required this.id,
+//     required this.creditId,
+//     required this.name,
+//     required this.gender,
+//     required this.profilePath,
+//   });
 
-  factory CreatedBy.fromJson(Map<String, dynamic> json) => CreatedBy(
-        id: json["id"],
-        creditId: json["credit_id"],
-        name: json["name"],
-        gender: json["gender"],
-        profilePath: json["profile_path"],
-      );
+//   factory CreatedBy.fromJson(Map<String, dynamic> json) => CreatedBy(
+//         id: json["id"],
+//         creditId: json["credit_id"],
+//         name: json["name"],
+//         gender: json["gender"],
+//         profilePath: json["profile_path"],
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "credit_id": creditId,
-        "name": name,
-        "gender": gender,
-        "profile_path": profilePath,
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "credit_id": creditId,
+//         "name": name,
+//         "gender": gender,
+//         "profile_path": profilePath,
+//       };
+// }
 
 class Genre {
   final int id;
@@ -189,70 +189,6 @@ class Genre {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-      };
-}
-
-class LastEpisodeToAir {
-  final int id;
-  final String name;
-  final String overview;
-  final double voteAverage;
-  final int voteCount;
-  final DateTime airDate;
-  final int episodeNumber;
-  final String episodeType;
-  final String productionCode;
-  final int runtime;
-  final int seasonNumber;
-  final int showId;
-  final String stillPath;
-
-  LastEpisodeToAir({
-    required this.id,
-    required this.name,
-    required this.overview,
-    required this.voteAverage,
-    required this.voteCount,
-    required this.airDate,
-    required this.episodeNumber,
-    required this.episodeType,
-    required this.productionCode,
-    required this.runtime,
-    required this.seasonNumber,
-    required this.showId,
-    required this.stillPath,
-  });
-
-  factory LastEpisodeToAir.fromJson(Map<String, dynamic> json) => LastEpisodeToAir(
-        id: json["id"],
-        name: json["name"],
-        overview: json["overview"],
-        voteAverage: json["vote_average"]?.toDouble(),
-        voteCount: json["vote_count"],
-        airDate: DateTime.parse(json["air_date"]),
-        episodeNumber: json["episode_number"],
-        episodeType: json["episode_type"],
-        productionCode: json["production_code"],
-        runtime: json["runtime"],
-        seasonNumber: json["season_number"],
-        showId: json["show_id"],
-        stillPath: json["still_path"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "overview": overview,
-        "vote_average": voteAverage,
-        "vote_count": voteCount,
-        "air_date": "${airDate.year.toString().padLeft(4, '0')}-${airDate.month.toString().padLeft(2, '0')}-${airDate.day.toString().padLeft(2, '0')}",
-        "episode_number": episodeNumber,
-        "episode_type": episodeType,
-        "production_code": productionCode,
-        "runtime": runtime,
-        "season_number": seasonNumber,
-        "show_id": showId,
-        "still_path": stillPath,
       };
 }
 
@@ -326,7 +262,7 @@ class Season {
   });
 
   factory Season.fromJson(Map<String, dynamic> json) => Season(
-        airDate: (json["air_date"] != null) ? DateTime.parse(json["air_date"]) : null,
+        airDate: (json["air_date"] != null && json["air_date"] != "") ? DateTime.parse(json["air_date"]) : null,
         episodeCount: json["episode_count"],
         id: json["id"],
         name: json["name"],

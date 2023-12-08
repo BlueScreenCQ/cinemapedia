@@ -1,8 +1,14 @@
 import 'package:cinemapedia/domain/datasources/tv_datasource.dart';
+import 'package:cinemapedia/domain/entities/episode.dart';
 import 'package:cinemapedia/domain/entities/tv.dart';
+import 'package:cinemapedia/domain/entities/watch_provider.dart';
+import 'package:cinemapedia/infrastructure/mappers/episode_mapper.dart';
 import 'package:cinemapedia/infrastructure/mappers/movie_mapper.dart';
 import 'package:cinemapedia/infrastructure/mappers/tv_mapper.dart';
+import 'package:cinemapedia/infrastructure/mappers/watch_provider_mapper.dart';
+import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_episode_response.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_response.dart';
+import 'package:cinemapedia/infrastructure/models/moviedb/providers_reponse.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/tv_details_moviedb.dart';
 import 'package:dio/dio.dart';
 import 'package:cinemapedia/config/constants/envirovement.dart';
@@ -82,44 +88,39 @@ class TVMoviedbDatasource extends TVDatasource {
     return _jsonToMovies(response.data);
   }
 
-  // @override
-  // Future<List<Movie>> getSimilarMovies(int movieId) async {
-  //   final response = await dio.get('/movie/$movieId/similar');
-  //   return _jsonToMovies(response.data);
-  // }
+  @override
+  Future<Map<String, List<WatchProvider>>> getTvWatchProviderById(String tvId) async {
+    final response = await dio.get('/tv/$tvId/watch/providers');
 
-  // @override
-  // Future<List<Video>> getYoutubeVideosById(int movieId) async {
-  //   final response = await dio.get('/movie/$movieId/videos');
-  //   final moviedbVideosReponse = MoviedbVideosResponse.fromJson(response.data);
-  //   final videos = <Video>[];
+    final moviedbProvidersReponse = WatchProvidersResponse.fromJson(response.data['results']['ES']);
 
-  //   for (final moviedbVideo in moviedbVideosReponse.results) {
-  //     if (moviedbVideo.site == 'YouTube') {
-  //       final video = VideoMapper.moviedbVideoToEntity(moviedbVideo);
-  //       videos.add(video);
-  //     }
-  //   }
+    Map<String, List<WatchProvider>> watchProviders = {};
 
-  //   return videos;
-  // }
+    watchProviders[tvId] = WatchProviderMapper.watchProviderToEntity(moviedbProvidersReponse);
 
-  // @override
-  // Future<Map<String, List<WatchProvider>>> getWatchProviderById(String movieId) async {
-  //   final response = await dio.get('/movie/$movieId/watch/providers');
+    return watchProviders;
+  }
 
-  //   // print('Esta es la respuesta');
-  //   // print(movieId);
-  //   // print(response.data['results']['ES']['link']);
+  @override
+  Future<List<Episode>> getSeasonById(String tvId, int seasonNumber) async {
+    final response = await dio.get('/tv/$tvId/season/$seasonNumber');
 
-  //   // response.data['results']['ES']['link'] = response.data['id'];
+    List<Episode> episodes = [];
 
-  //   final WatchProvidersResponse moviedbProvidersReponse = WatchProvidersResponse.fromJson(response.data['results']['ES']);
+    for (int i = 0; i < response.data['episodes'].length; i++) {
+      final episodeResponse = EpisodeResponse.fromJson(response.data['episodes'][i]);
 
-  //   Map<String, List<WatchProvider>> watchProviders = {};
+      final episode = EpisodeMapper.episodeFromMovieDBToEntity(episodeResponse);
 
-  //   watchProviders[movieId] = WatchProviderMapper.watchProviderToEntity(moviedbProvidersReponse);
+      episodes.add(episode);
+    }
 
-  //   return watchProviders;
-  // }
+    // response.data['episodes'].forEach((key, value) => episodes.add(EpisodeMapper.episodeFromMovieDBToEntity(EpisodeResponse.fromJson(value))));
+
+    // final List episodesResponse = response.data['episodes'].map((episode) => EpisodeResponse.fromJson(episode)).toList();
+
+    // final List<Episode> episodes = episodesResponse.map((episode) => EpisodeMapper.episodeFromMovieDBToEntity(episode)).toList();
+
+    return episodes;
+  }
 }

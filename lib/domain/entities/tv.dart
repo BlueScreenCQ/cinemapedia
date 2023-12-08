@@ -1,4 +1,5 @@
 import 'package:cinemapedia/domain/entities/crew.dart';
+import 'package:cinemapedia/domain/entities/season.dart';
 
 class TV {
   final bool adult;
@@ -16,6 +17,7 @@ class TV {
   final double popularity;
   final String posterPath;
   final String status;
+  final List<Season> seasons;
   // final bool video;
   final double voteAverage;
   final int voteCount;
@@ -38,6 +40,7 @@ class TV {
     required this.popularity,
     required this.posterPath,
     required this.status,
+    required this.seasons,
     required this.voteAverage,
     required this.voteCount,
     required this.name,

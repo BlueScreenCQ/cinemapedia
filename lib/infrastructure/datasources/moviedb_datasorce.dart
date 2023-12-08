@@ -27,7 +27,7 @@ class MoviedbDatasource extends MovieDatasource {
     List<Movie> cleanUpcoming = [];
 
     for (Movie movie in upcoming) {
-      if (movie.releaseDate != null && movie.releaseDate!.isAfter(DateTime.now().subtract(const Duration(days: 1)))) {
+      if (movie.releaseDate != null && movie.releaseDate!.isAfter(DateTime.now())) {
         cleanUpcoming.add(movie);
       }
     }

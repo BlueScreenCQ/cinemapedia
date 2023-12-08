@@ -369,7 +369,7 @@ class _ActorsByMovie extends ConsumerWidget {
 
         Padding(
           padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
-          child: Text('Crew', style: textStyle.titleLarge),
+          child: Text('Equipo', style: textStyle.titleLarge),
         ),
 
         //Crew
@@ -381,43 +381,46 @@ class _ActorsByMovie extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final Crew item = crew[index];
 
-                return Container(
-                  padding: const EdgeInsets.all(8.0),
-                  width: 135,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    //Actor photo
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        item.profilePath!,
-                        height: 180,
-                        width: 135,
-                        fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () => context.push('/home/0/actor/${item.id}'),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: 135,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      //Actor photo
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          item.profilePath!,
+                          height: 180,
+                          width: 135,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 5),
+                      const SizedBox(height: 5),
 
-                    //Name
-                    Text(
-                      item.name,
-                      maxLines: 2,
-                      style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                    ),
-
-                    Text(
-                      item.job ?? '',
-                      maxLines: 2,
-                      style: const TextStyle(overflow: TextOverflow.ellipsis),
-                    ),
-
-                    if (item.department != null)
+                      //Name
                       Text(
-                        '(${item.department})',
+                        item.name,
+                        maxLines: 2,
+                        style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                      ),
+
+                      Text(
+                        item.job ?? '',
                         maxLines: 2,
                         style: const TextStyle(overflow: TextOverflow.ellipsis),
                       ),
-                  ]),
+
+                      if (item.department != null)
+                        Text(
+                          '(${item.department})',
+                          maxLines: 2,
+                          style: const TextStyle(overflow: TextOverflow.ellipsis),
+                        ),
+                    ]),
+                  ),
                 );
               }),
         ),

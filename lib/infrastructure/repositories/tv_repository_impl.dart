@@ -1,6 +1,8 @@
 import 'package:cinemapedia/domain/datasources/tv_datasource.dart';
+import 'package:cinemapedia/domain/entities/episode.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/domain/entities/tv.dart';
+import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:cinemapedia/domain/repositories/tv_repository.dart';
 
 class TVRepositoryImpl extends TVRepository {
@@ -37,18 +39,13 @@ class TVRepositoryImpl extends TVRepository {
     return datasource.searchTV(query);
   }
 
-  // @override
-  // Future<List<Movie>> getSimilarMovies(int movieId) {
-  //   return datasource.getSimilarMovies(movieId);
-  // }
+  @override
+  Future<Map<String, List<WatchProvider>>> getTvWatchProviderById(String tvId) {
+    return datasource.getTvWatchProviderById(tvId);
+  }
 
-  // @override
-  // Future<List<Video>> getYoutubeVideosById(int movieId) {
-  //   return datasource.getYoutubeVideosById(movieId);
-  // }
-
-  // @override
-  // Future<Map<String, List<WatchProvider>>> getWatchProviderById(String movieId) {
-  //   return datasource.getWatchProviderById(movieId);
-  // }
+  @override
+  Future<List<Episode>> getSeasonById(String tvId, int seasonNumber) {
+    return datasource.getSeasonById(tvId, seasonNumber);
+  }
 }
