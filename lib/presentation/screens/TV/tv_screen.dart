@@ -32,7 +32,7 @@ class TVScreenState extends ConsumerState<TVScreen> {
 
     ref.read(tvInfoProvider.notifier).loadTV(widget.tvId);
     // ref.read(actorsByMovieProvider.notifier).loadActors(widget.tvId);
-    // ref.read(watchProviderByTvProvider.notifier).loadWatchProviders(widget.tvId);
+    ref.read(watchProviderByTvProvider.notifier).loadWatchProviders(widget.tvId);
   }
 
   @override
@@ -79,7 +79,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
 
           //   await ref.read(favoriteMoviesProvider.notifier).toggleFavorite(tv); //TODO ARREGLAR
 
-          //   //Esto invalida el estado actual del provider y lo vuelve a consultar
+          //Esto invalida el estado actual del provider y lo vuelve a consultar
           //   ref.invalidate(isFavoriteProvider(tv.id));
           // },
           icon: isFavoriteFuture.when(
@@ -233,6 +233,8 @@ class _TVDetails extends StatelessWidget {
                     ),
                   ),
 
+                if (tv.status != null && tv.status != "") _tvStatus(status: tv.status),
+
                 SizedBox(
                   width: 120,
                   child: Text(
@@ -282,7 +284,7 @@ class _TVDetails extends StatelessWidget {
         ),
 
         //PLATAFORMAS
-        // _WatchProvidersByTv(movieID: tv.id.toString()),
+        _WatchProvidersByTv(movieID: tv.id.toString()),
         //PLATAFORMAS
 
         //*Géneros
@@ -571,7 +573,47 @@ class _Seasons extends StatelessWidget {
     // );
 
     return SeasonExpansionPanelList(
+      tvID: tv.id,
       seasons: tv.seasons,
+    );
+  }
+}
+
+class _tvStatus extends StatelessWidget {
+  final String status;
+
+  const _tvStatus({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+    String text;
+
+    switch (status) {
+      case 'Ended':
+        text = "Serie finalizada";
+        break;
+      case 'Returning Series':
+        text = 'Esperando nueva temporada';
+        break;
+      case 'Canceled':
+        text = 'Serie cancelada';
+        break;
+      case 'In Production':
+        text = 'En producción';
+        break;
+      default:
+        text = status;
+        break;
+    }
+
+    return SizedBox(
+      width: 120,
+      child: Text(
+        text,
+        style: textStyle.titleSmall,
+        // textAlign: TextAlign.center,
+      ),
     );
   }
 }

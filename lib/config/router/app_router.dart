@@ -28,6 +28,16 @@ final appRouter = GoRouter(initialLocation: '/home/0', routes: [
               return TVScreen(tvId: tvID);
             }),
         GoRoute(
+            path: 'tv/:id/:sesonN/:episodeN', // quitamos el primer slash / porque es la ruta del padre
+            name: EpisodeScreen.name,
+            builder: (context, state) {
+              final tvID = state.pathParameters['id'] ?? 'no-id';
+              final seasonNumber = state.pathParameters['sesonN'] ?? 'no-id';
+              final episodeNumber = state.pathParameters['episodeN'] ?? 'no-id';
+
+              return EpisodeScreen(tvId: tvID, seasonNumber: int.parse(seasonNumber), episodeNumber: int.parse(episodeNumber));
+            }),
+        GoRoute(
             path: 'actor/:id', // quitamos el primer slash / porque es la ruta del padre
             name: ActorScreen.name,
             builder: (context, state) {
