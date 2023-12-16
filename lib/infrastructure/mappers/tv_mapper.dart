@@ -1,6 +1,7 @@
 import 'package:cinemapedia/domain/entities/crew.dart';
 import 'package:cinemapedia/domain/entities/tv.dart';
 import 'package:cinemapedia/domain/entities/season.dart' as entity_season;
+import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/tv_details_moviedb.dart';
 
 class TVMapper {
@@ -38,13 +39,18 @@ class TVMapper {
                 posterPath: (season.posterPath != '') ? 'https://image.tmdb.org/t/p/w500${season.posterPath}' : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
                 seasonNumber: season.seasonNumber,
                 voteAverage: season.voteAverage,
-                episodes: [] //TODO esto hay que verlo bien.
-                ))
+                episodes: []))
             .toList(),
         voteAverage: movieDB.voteAverage,
         voteCount: movieDB.voteCount,
         name: movieDB.name,
         firstAirDate: movieDB.firstAirDate,
         lastAirDate: movieDB.lastAirDate,
+        productionCompanies: movieDB.productionCompanies
+            .map((comp) =>
+                WatchProvider(providerId: comp.id, providerName: comp.name, logoPath: (comp.logoPath != null && comp.logoPath != "") ? 'https://image.tmdb.org/t/p/w500${comp.logoPath}' : 'no-logo'))
+            .toList(),
+        tagline: movieDB.tagline,
+        type: movieDB.type,
       );
 }

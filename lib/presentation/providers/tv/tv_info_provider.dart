@@ -39,7 +39,7 @@ class TVMapNotifier extends StateNotifier<Map<String, TV>> {
 
     //SEASONS
     if (tv.numberOfSeasons != null && tv.numberOfSeasons != 0) {
-      for (int i = 0; i < tv.numberOfSeasons; i++) {
+      for (int i = 0; i < tv.seasons.length; i++) {
         if (tv.seasons[i] != null) {
           List<Episode> season = await getSeasons(tvID, tv.seasons[i].seasonNumber);
           tv.seasons[i].episodes = season;
@@ -47,7 +47,7 @@ class TVMapNotifier extends StateNotifier<Map<String, TV>> {
       }
     }
 
-    for (int i = 0; i < tv.numberOfSeasons; i++) {
+    for (int i = 0; i < tv.seasons.length; i++) {
       state['tvID']!.seasons.add(tv.seasons[i]);
     }
   }

@@ -14,6 +14,11 @@ class ActorRepositoryImp extends ActorRepository {
   }
 
   @override
+  Future<Map<String, List<dynamic>>> getActorsByTV(String tvId) async {
+    return datasource.getActorsByTV(tvId);
+  }
+
+  @override
   Future<Actor> getActorById(String id) {
     return datasource.getActorById(id);
   }

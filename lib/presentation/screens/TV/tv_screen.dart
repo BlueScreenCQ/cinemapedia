@@ -1,11 +1,12 @@
 import 'package:cinemapedia/presentation/providers/watch_providers/watch_provider_by_tv_provider.dart';
+import 'package:cinemapedia/presentation/widgets/shared/actors_by_show.dart';
+import 'package:cinemapedia/presentation/widgets/shared/snack_bar.dart';
 import 'package:cinemapedia/presentation/widgets/tv/season_expansion_panel_list.dart';
 import 'package:flutter/material.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_gradient.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_read_more_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/crew.dart';
 import 'package:cinemapedia/domain/entities/tv.dart';
 import 'package:cinemapedia/config/helpers/human_formats.dart';
@@ -31,7 +32,7 @@ class TVScreenState extends ConsumerState<TVScreen> {
     super.initState();
 
     ref.read(tvInfoProvider.notifier).loadTV(widget.tvId);
-    // ref.read(actorsByMovieProvider.notifier).loadActors(widget.tvId);
+    ref.read(actorsBytvProvider.notifier).loadActors(widget.tvId);
     ref.read(watchProviderByTvProvider.notifier).loadWatchProviders(widget.tvId);
   }
 
@@ -271,6 +272,7 @@ class _TVDetails extends StatelessWidget {
                 children: [
                   Text(tv.name, style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
                   if (tv.name != tv.originalName) Text(tv.originalName, style: textStyle.titleMedium!.copyWith(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+                  if (tv.tagline != null && tv.tagline != "") Text('"${tv.tagline}"', style: textStyle.titleMedium!.copyWith(fontStyle: FontStyle.italic)),
                   const SizedBox(height: 3.0),
                   // Text(movie.overview),
                   CustomReadMoreText(
@@ -282,6 +284,10 @@ class _TVDetails extends StatelessWidget {
             ),
           ]),
         ),
+
+        //PRODUCTORA
+        if (tv.productionCompanies != null && tv.productionCompanies != []) _ProductionCompaniesByTv(companies: tv.productionCompanies),
+        //PRODUCTORA
 
         //PLATAFORMAS
         _WatchProvidersByTv(movieID: tv.id.toString()),
@@ -306,9 +312,10 @@ class _TVDetails extends StatelessWidget {
 
         if (tv.createdBy.isNotEmpty) _CreatedBy(tv: tv),
 
-        _Seasons(tv: tv),
+        //Actores
+        ActorsByShow(showId: tv.id.toString(), isTV: true),
 
-        // _ActorsByMovie(movieID: tv.id.toString()),
+        _Seasons(tv: tv),
 
         //* Videos de la película (si tiene)
         // VideosFromMovie(movieId: tv.id),
@@ -346,11 +353,14 @@ class _WatchProvidersByTv extends ConsumerWidget {
         children: [
           ...providers[movieID]!.map((provider) => Container(
               margin: const EdgeInsets.only(right: 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  provider.logoPath,
-                  height: 40,
+              child: GestureDetector(
+                onTap: () => showProviderNameToast(context, provider.providerName),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    provider.logoPath,
+                    height: 40,
+                  ),
                 ),
               )))
         ],
@@ -359,132 +369,39 @@ class _WatchProvidersByTv extends ConsumerWidget {
   }
 }
 
-class _ActorsByMovie extends ConsumerWidget {
-  final String movieID;
-
-  const _ActorsByMovie({required this.movieID});
+class _ProductionCompaniesByTv extends ConsumerWidget {
+  final List<WatchProvider> companies;
+  const _ProductionCompaniesByTv({required this.companies});
 
   @override
   Widget build(BuildContext context, ref) {
     final textStyle = Theme.of(context).textTheme;
 
-    final actorsByMovie = ref.watch(actorsByMovieProvider);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        children: [
+          ...companies.map((provider) {
+            if (provider.logoPath == 'no-logo') return Container();
 
-    if (actorsByMovie[movieID] == null) {
-      return const CircularProgressIndicator(strokeWidth: 2);
-    }
-
-    final actors = actorsByMovie[movieID]!['Actors'];
-    final crew = actorsByMovie[movieID]!['Crew'];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
-          child: Text('Reparto', style: textStyle.titleLarge),
-        ),
-
-        //Actors
-        SizedBox(
-          height: 280,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: actors!.length,
-              itemBuilder: (context, index) {
-                final Actor actor = actors[index];
-
-                return GestureDetector(
-                  onTap: () => context.push('/home/0/actor/${actor.id}'),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: 135,
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      //Actor photo
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          actor.profilePath,
-                          height: 180,
-                          width: 135,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-
-                      const SizedBox(height: 5),
-
-                      //Name
-                      Text(
-                        actor.name,
-                        maxLines: 2,
-                        style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                      ),
-                      Text(
-                        actor.character ?? '',
-                        maxLines: 2,
-                        style: const TextStyle(fontStyle: FontStyle.italic, overflow: TextOverflow.ellipsis),
-                      ),
-                    ]),
+            return Container(
+                margin: const EdgeInsets.only(right: 10),
+                child: GestureDetector(
+                  onTap: () => showProviderNameToast(context, provider.providerName),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      provider.logoPath,
+                      height: 40,
+                      width: 40,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                );
-              }),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
-          child: Text('Equipo', style: textStyle.titleLarge),
-        ),
-
-        //Crew
-        SizedBox(
-          height: 290,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: crew!.length,
-              itemBuilder: (context, index) {
-                final Crew item = crew[index];
-
-                return Container(
-                  padding: const EdgeInsets.all(8.0),
-                  width: 135,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    //Actor photo
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        item.profilePath!,
-                        height: 180,
-                        width: 135,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    //Name
-                    Text(
-                      item.name,
-                      maxLines: 2,
-                      style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                    ),
-
-                    Text(
-                      item.job ?? '',
-                      maxLines: 2,
-                      style: const TextStyle(overflow: TextOverflow.ellipsis),
-                    ),
-
-                    if (item.department != null)
-                      Text(
-                        '(${item.department})',
-                        maxLines: 2,
-                        style: const TextStyle(overflow: TextOverflow.ellipsis),
-                      ),
-                  ]),
-                );
-              }),
-        ),
-      ],
+                ));
+          })
+        ],
+      ),
     );
   }
 }
@@ -503,7 +420,7 @@ class _CreatedBy extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 8.0),
+          padding: const EdgeInsets.only(top: 5.0, left: 20.0),
           child: Text('Creada por', style: textStyle.titleLarge),
         ),
 

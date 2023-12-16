@@ -127,7 +127,7 @@ class _ActorDetails extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const Icon(
-                          Icons.airline_seat_flat_angled_outlined,
+                          Icons.villa_outlined,
                           size: 20,
                         ),
                         const SizedBox(width: 5),
@@ -167,15 +167,19 @@ class _ActorDetails extends StatelessWidget {
                   ),
                   // Lugar de nacimiento
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const Icon(Icons.place_outlined, size: 20),
                       const SizedBox(width: 3),
-                      Text(
-                        actor.placeOfBirth!,
-                        style: textStyle.titleSmall,
-                        textAlign: TextAlign.center,
+                      Expanded(
+                        child: Text(
+                          actor.placeOfBirth!,
+                          style: textStyle.titleSmall,
+                          textAlign: TextAlign.start,
+                          maxLines: 2,
+                          overflow: TextOverflow.clip,
+                        ),
                       ),
                     ],
                   ),
@@ -388,7 +392,7 @@ class _CombinedCreditsByActor extends ConsumerWidget {
         if (crew!.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.only(left: 20, bottom: 3),
-            child: Text('Equipo', style: textStyle.titleLarge),
+            child: Text('Equipo de producción', style: textStyle.titleLarge),
           ),
 
           //Crew
@@ -491,33 +495,11 @@ class MovieOrTVPoster extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
-      child: Stack(
-        children: [
-          Image.network(
-            movie.posterPath,
-            height: 180,
-            width: 135,
-            fit: BoxFit.cover,
-          ),
-
-          // const CustomGradient(begin: Alignment.bottomLeft, end: Alignment.bottomRight, stops: [
-          //   0.0,
-          //   0.3
-          // ], colors: [
-          //   Colors.black54,
-          //   Colors.transparent,
-          // ]),
-
-          Positioned(
-              bottom: 5.0,
-              right: 10.0,
-              child: Icon(
-                (movie.mediaType == "movie") ? Icons.movie_outlined : Icons.live_tv_outlined,
-                color: Colors.white,
-                size: 30,
-                shadows: const [Shadow(color: Colors.black45, offset: Offset(2.0, 2.0))],
-              ))
-        ],
+      child: Image.network(
+        movie.posterPath,
+        height: 180,
+        width: 135,
+        fit: BoxFit.cover,
       ),
     );
   }

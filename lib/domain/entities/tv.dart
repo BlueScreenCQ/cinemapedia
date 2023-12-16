@@ -1,5 +1,6 @@
 import 'package:cinemapedia/domain/entities/crew.dart';
 import 'package:cinemapedia/domain/entities/season.dart';
+import 'package:cinemapedia/domain/entities/watch_provider.dart';
 
 class TV {
   final bool adult;
@@ -16,9 +17,11 @@ class TV {
   final String overview;
   final double popularity;
   final String posterPath;
+  final List<WatchProvider> productionCompanies;
   final String status;
   final List<Season> seasons;
-  // final bool video;
+  final String tagline;
+  final String type;
   final double voteAverage;
   final int voteCount;
   final String name;
@@ -39,8 +42,11 @@ class TV {
     required this.overview,
     required this.popularity,
     required this.posterPath,
+    required this.productionCompanies,
     required this.status,
     required this.seasons,
+    required this.tagline,
+    required this.type,
     required this.voteAverage,
     required this.voteCount,
     required this.name,

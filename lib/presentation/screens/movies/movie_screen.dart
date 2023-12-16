@@ -1,18 +1,17 @@
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:cinemapedia/presentation/widgets/movies/similar_movies.dart';
+import 'package:cinemapedia/presentation/widgets/shared/actors_by_show.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_gradient.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_read_more_text.dart';
+import 'package:cinemapedia/presentation/widgets/shared/snack_bar.dart';
 import 'package:cinemapedia/presentation/widgets/videos/videos_from_movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cinemapedia/domain/entities/actor.dart';
-import 'package:cinemapedia/domain/entities/crew.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:animate_do/animate_do.dart';
 
 import 'package:cinemapedia/presentation/providers/providers.dart';
-import 'package:go_router/go_router.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';
@@ -245,7 +244,8 @@ class _MovieDetails extends StatelessWidget {
           ),
         ),
 
-        _ActorsByMovie(movieID: movie.id.toString()),
+        //Actores
+        ActorsByShow(showId: movie.id.toString()),
 
         //* Videos de la película (si tiene)
         VideosFromMovie(movieId: movie.id),
@@ -283,148 +283,18 @@ class _WatchProvidersByMovie extends ConsumerWidget {
         children: [
           ...providers[movieID]!.map((provider) => Container(
               margin: const EdgeInsets.only(right: 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  provider.logoPath,
-                  height: 40,
+              child: GestureDetector(
+                onTap: () => showProviderNameToast(context, provider.providerName),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    provider.logoPath,
+                    height: 40,
+                  ),
                 ),
               )))
         ],
       ),
-    );
-  }
-}
-
-class _ActorsByMovie extends ConsumerWidget {
-  final String movieID;
-
-  const _ActorsByMovie({required this.movieID});
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final textStyle = Theme.of(context).textTheme;
-
-    final actorsByMovie = ref.watch(actorsByMovieProvider);
-
-    if (actorsByMovie[movieID] == null) {
-      return const CircularProgressIndicator(strokeWidth: 2);
-    }
-
-    final actors = actorsByMovie[movieID]!['Actors'];
-    final crew = actorsByMovie[movieID]!['Crew'];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
-          child: Text('Reparto', style: textStyle.titleLarge),
-        ),
-
-        //Actors
-        SizedBox(
-          height: 280,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: actors!.length,
-              itemBuilder: (context, index) {
-                final Actor actor = actors[index];
-
-                return GestureDetector(
-                  onTap: () => context.push('/home/0/actor/${actor.id}'),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: 135,
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      //Actor photo
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          actor.profilePath,
-                          height: 180,
-                          width: 135,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-
-                      const SizedBox(height: 5),
-
-                      //Name
-                      Text(
-                        actor.name,
-                        maxLines: 2,
-                        style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                      ),
-                      Text(
-                        actor.character ?? '',
-                        maxLines: 2,
-                        style: const TextStyle(fontStyle: FontStyle.italic, overflow: TextOverflow.ellipsis),
-                      ),
-                    ]),
-                  ),
-                );
-              }),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
-          child: Text('Equipo', style: textStyle.titleLarge),
-        ),
-
-        //Crew
-        SizedBox(
-          height: 290,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: crew!.length,
-              itemBuilder: (context, index) {
-                final Crew item = crew[index];
-
-                return GestureDetector(
-                  onTap: () => context.push('/home/0/actor/${item.id}'),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: 135,
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      //Actor photo
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          item.profilePath!,
-                          height: 180,
-                          width: 135,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-
-                      const SizedBox(height: 5),
-
-                      //Name
-                      Text(
-                        item.name,
-                        maxLines: 2,
-                        style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                      ),
-
-                      Text(
-                        item.job ?? '',
-                        maxLines: 2,
-                        style: const TextStyle(overflow: TextOverflow.ellipsis),
-                      ),
-
-                      if (item.department != null)
-                        Text(
-                          '(${item.department})',
-                          maxLines: 2,
-                          style: const TextStyle(overflow: TextOverflow.ellipsis),
-                        ),
-                    ]),
-                  ),
-                );
-              }),
-        ),
-      ],
     );
   }
 }

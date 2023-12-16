@@ -27,22 +27,12 @@ class EpisodeScreen extends ConsumerStatefulWidget {
 
 class EpisodeScreenState extends ConsumerState<EpisodeScreen> {
   @override
-  void initState() {
-    super.initState();
-
-    ref.read(tvInfoProvider.notifier).loadTV(widget.tvId);
-
-    // ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
-    // ref.read(actorsByMovieProvider.notifier).loadActors(widget.movieId);
-    // ref.read(watchProviderByMovieProvider.notifier).loadWatchProviders(widget.movieId);
-  }
-
-  @override
   Widget build(BuildContext context) {
     //El Map está en el provider y va a mantener los datos de las pelis que ya se han consultado
 
     final TV? tv = ref.watch(tvInfoProvider)[widget.tvId];
     Episode? episode;
+    String posterURL = "";
 
     if (tv == null) {
       return const Scaffold(
@@ -50,12 +40,15 @@ class EpisodeScreenState extends ConsumerState<EpisodeScreen> {
       );
     }
 
+    int i;
+
     //Buscamos el episodio por su número
-    for (int i = 0; i < tv.seasons.length; i++) {
+    for (i = 0; i < tv.seasons.length; i++) {
       if (tv.seasons[i].seasonNumber == widget.seasonNumber) {
         for (int j = 0; j < tv.seasons[i].episodes.length; j++) {
           if (tv.seasons[i].episodes[j].episodeNumber == widget.episodeNumber) {
             episode = tv.seasons[i].episodes[j];
+            posterURL = tv.seasons[i].posterPath;
           }
         }
       }
@@ -83,7 +76,7 @@ class EpisodeScreenState extends ConsumerState<EpisodeScreen> {
     return Scaffold(
       body: CustomScrollView(
         physics: const ClampingScrollPhysics(),
-        slivers: [_CustomSliverAppbar(tv: tv), SliverList(delegate: SliverChildBuilderDelegate((context, index) => _MovieDetails(tv: tv, episode: episode!), childCount: 1))],
+        slivers: [_CustomSliverAppbar(tv: tv, posterURL: posterURL), SliverList(delegate: SliverChildBuilderDelegate((context, index) => _EpisodeDetails(tv: tv, episode: episode!), childCount: 1))],
       ),
     );
   }
@@ -91,8 +84,9 @@ class EpisodeScreenState extends ConsumerState<EpisodeScreen> {
 
 class _CustomSliverAppbar extends ConsumerWidget {
   final TV tv;
+  final String posterURL;
 
-  const _CustomSliverAppbar({required this.tv});
+  const _CustomSliverAppbar({required this.tv, required this.posterURL});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -138,7 +132,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
           children: [
             SizedBox.expand(
               child: Image.network(
-                tv.posterPath,
+                posterURL,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress != null) return const SizedBox();
@@ -171,11 +165,11 @@ class _CustomSliverAppbar extends ConsumerWidget {
   }
 }
 
-class _MovieDetails extends StatelessWidget {
+class _EpisodeDetails extends StatelessWidget {
   final TV tv;
   final Episode episode;
 
-  const _MovieDetails({required this.tv, required this.episode});
+  const _EpisodeDetails({required this.tv, required this.episode});
 
   @override
   Widget build(BuildContext context) {
@@ -189,13 +183,13 @@ class _MovieDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: Text(tv.name, style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
+            padding: const EdgeInsets.only(top: 10.0, left: 10.0),
+            child: Text(tv.name, style: textStyle.headlineLarge!.copyWith(fontWeight: FontWeight.bold)),
           ),
           const SizedBox(height: 5.0),
           Padding(
-            padding: const EdgeInsets.only(left: 15.0),
-            child: Text('${episode.seasonNumber}x${episode.episodeNumber.toString().padLeft(2, '0')} - ${episode.name}', style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
+            padding: const EdgeInsets.only(left: 20.0),
+            child: Text('${episode.seasonNumber}x${episode.episodeNumber.toString().padLeft(2, '0')} - ${episode.name}', style: textStyle.headlineMedium!.copyWith(fontWeight: FontWeight.bold)),
           ),
           const SizedBox(height: 5.0),
           ClipRRect(
@@ -209,7 +203,7 @@ class _MovieDetails extends StatelessWidget {
           ),
           const SizedBox(height: 10.0),
           CustomReadMoreText(
-            text: tv.overview,
+            text: episode.overview,
             textStyle: textStyle.bodyLarge,
             trimLines: 10,
           ),
@@ -230,11 +224,14 @@ class _MovieDetails extends StatelessWidget {
                       const SizedBox(width: 2),
                       Text(tv.voteAverage.toStringAsPrecision(2), style: textStyle.titleMedium?.copyWith(color: Colors.yellow.shade800)),
                       // const Spacer(),
-                      const SizedBox(width: 15.0),
-                      Text(HumanFormats.number(tv.popularity), style: textStyle.titleMedium),
+                      // const SizedBox(width: 15.0),
+                      // Text(HumanFormats.number(tv.popularity), style: textStyle.titleMedium),
                     ],
                   ),
                 ),
+
+                const SizedBox(height: 5.0),
+                if (episode.episodeType == "finale") _episodeType(type: episode.episodeType),
 
                 // Fecha de estreno
                 if (episode.airDate != null)
@@ -255,11 +252,192 @@ class _MovieDetails extends StatelessWidget {
                           ),
                         ],
                       )),
+
+                // Duración
+                if (episode.runtime != null)
+                  SizedBox(
+                      width: 120,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.timer_outlined,
+                            size: 15,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            '${episode.runtime} minutos',
+                            style: textStyle.titleMedium,
+                          ),
+                        ],
+                      )),
               ],
             ),
             const SizedBox(width: 10),
           ]),
+          const SizedBox(height: 20.0),
+          if (episode.guestStars != null && episode.guestStars != []) _GuestStars(actors: episode.guestStars),
+          if (episode.crew != null && episode.crew != []) _Crew(crew: episode.crew),
+          const SizedBox(height: 20.0),
         ],
+      ),
+    );
+  }
+}
+
+class _GuestStars extends StatelessWidget {
+  final List<Actor> actors;
+
+  const _GuestStars({required this.actors});
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Padding(
+        padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
+        child: Text('Reparto del episodio', style: textStyle.titleLarge),
+      ),
+
+      //Actors
+      SizedBox(
+        height: 260,
+        child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: actors.length,
+            itemBuilder: (context, index) {
+              final Actor actor = actors[index];
+
+              return GestureDetector(
+                onTap: () => context.push('/home/0/actor/${actor.id}'),
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  width: 135,
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    //Actor photo
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        actor.profilePath,
+                        height: 180,
+                        width: 135,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    //Name
+                    Text(
+                      actor.name,
+                      maxLines: 2,
+                      style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                    ),
+                    Text(
+                      actor.character ?? '',
+                      maxLines: 2,
+                      style: const TextStyle(fontStyle: FontStyle.italic, overflow: TextOverflow.ellipsis),
+                    ),
+                  ]),
+                ),
+              );
+            }),
+      ),
+    ]);
+  }
+}
+
+class _Crew extends StatelessWidget {
+  final List<Crew> crew;
+
+  const _Crew({required this.crew});
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20, bottom: 3),
+          child: Text('Equipo de producción', style: textStyle.titleLarge),
+        ),
+
+        //Crew
+        SizedBox(
+          height: 290,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: crew.length,
+              itemBuilder: (context, index) {
+                final Crew item = crew[index];
+
+                return GestureDetector(
+                  onTap: () => context.push('/home/0/actor/${item.id}'),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: 135,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      //Actor photo
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          item.profilePath!,
+                          height: 180,
+                          width: 135,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+
+                      const SizedBox(height: 5),
+
+                      //Name
+                      Text(
+                        item.name,
+                        maxLines: 2,
+                        style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                      ),
+
+                      Text(
+                        item.job ?? '',
+                        maxLines: 2,
+                        style: const TextStyle(overflow: TextOverflow.ellipsis),
+                      ),
+
+                      if (item.department != null)
+                        Text(
+                          '(${item.department})',
+                          maxLines: 2,
+                          style: const TextStyle(overflow: TextOverflow.ellipsis),
+                        ),
+                    ]),
+                  ),
+                );
+              }),
+        ),
+      ],
+    );
+  }
+}
+
+class _episodeType extends StatelessWidget {
+  final String type;
+
+  const _episodeType({required this.type});
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
+    return SizedBox(
+      width: 120,
+      child: Text(
+        'Season Finale',
+        style: textStyle.titleMedium,
+        // textAlign: TextAlign.center,
       ),
     );
   }
