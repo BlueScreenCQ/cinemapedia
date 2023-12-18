@@ -48,7 +48,7 @@ class EpisodeScreenState extends ConsumerState<EpisodeScreen> {
         for (int j = 0; j < tv.seasons[i].episodes.length; j++) {
           if (tv.seasons[i].episodes[j].episodeNumber == widget.episodeNumber) {
             episode = tv.seasons[i].episodes[j];
-            posterURL = tv.seasons[i].posterPath;
+            posterURL = (tv.seasons[i].posterPath != 'no-poster') ? tv.seasons[i].posterPath : tv.posterPath;
           }
         }
       }
@@ -174,7 +174,7 @@ class _EpisodeDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    // final colors = Theme.of(context).colorScheme;
+    final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
 
     return Padding(
@@ -184,101 +184,121 @@ class _EpisodeDetails extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 10.0),
-            child: Text(tv.name, style: textStyle.headlineLarge!.copyWith(fontWeight: FontWeight.bold)),
+            child: Text(tv.name, style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
           ),
           const SizedBox(height: 5.0),
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
-            child: Text('${episode.seasonNumber}x${episode.episodeNumber.toString().padLeft(2, '0')} - ${episode.name}', style: textStyle.headlineMedium!.copyWith(fontWeight: FontWeight.bold)),
-          ),
-          const SizedBox(height: 5.0),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              episode.stillPath,
-              width: double.infinity,
-              height: 220,
-              fit: BoxFit.cover,
-            ),
+            child: Text('${episode.seasonNumber}x${episode.episodeNumber.toString().padLeft(2, '0')} - ${episode.name}', style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
           ),
           const SizedBox(height: 10.0),
-          CustomReadMoreText(
-            text: episode.overview,
-            textStyle: textStyle.bodyLarge,
-            trimLines: 10,
+          ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: (episode.stillPath != 'no-poster')
+                  ? Image.network(
+                      episode.stillPath,
+                      width: double.infinity,
+                      height: 220,
+                      fit: BoxFit.cover,
+                    )
+                  : SizedBox(
+                      width: double.infinity,
+                      height: 220,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: colors.secondaryContainer,
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.live_tv_outlined,
+                            size: 60,
+                          ),
+                        ),
+                      ),
+                    )),
+          const SizedBox(height: 10.0),
+          Padding(
+            padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+            child: CustomReadMoreText(
+              text: episode.overview,
+              textStyle: textStyle.bodyLarge,
+              trimLines: 10,
+            ),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Column(
+
+          const SizedBox(height: 8.0),
+
+          if (episode.episodeType == "finale") _episodeType(type: episode.episodeType),
+
+          const SizedBox(height: 8.0),
+
+          // Rating
+          SizedBox(
+            width: 300,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 5.0),
-
-                // Rating
-                SizedBox(
-                  width: 120,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
-                      const SizedBox(width: 2),
-                      Text(tv.voteAverage.toStringAsPrecision(2), style: textStyle.titleMedium?.copyWith(color: Colors.yellow.shade800)),
-                      // const Spacer(),
-                      // const SizedBox(width: 15.0),
-                      // Text(HumanFormats.number(tv.popularity), style: textStyle.titleMedium),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 5.0),
-                if (episode.episodeType == "finale") _episodeType(type: episode.episodeType),
-
-                // Fecha de estreno
-                if (episode.airDate != null)
-                  SizedBox(
-                      width: 120,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            Icons.calendar_month_outlined,
-                            size: 15,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            '${episode.airDate!.day.toString().padLeft(2, '0')}/${episode.airDate!.month.toString().padLeft(2, '0')}/${episode.airDate!.year.toString().padLeft(4, '0')}',
-                            style: textStyle.titleMedium,
-                          ),
-                        ],
-                      )),
-
-                // Duración
-                if (episode.runtime != null)
-                  SizedBox(
-                      width: 120,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            Icons.timer_outlined,
-                            size: 15,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            '${episode.runtime} minutos',
-                            style: textStyle.titleMedium,
-                          ),
-                        ],
-                      )),
+                Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 30),
+                const SizedBox(width: 2),
+                Text(tv.voteAverage.toStringAsPrecision(2), style: textStyle.titleLarge?.copyWith(color: Colors.yellow.shade800)),
+                // Text('${HumanFormats.intNumber(tv.voteCount)} veces valorado', style: textStyle.titleLarge),
               ],
             ),
-            const SizedBox(width: 10),
-          ]),
-          const SizedBox(height: 20.0),
-          if (episode.guestStars != null && episode.guestStars != []) _GuestStars(actors: episode.guestStars),
-          if (episode.crew != null && episode.crew != []) _Crew(crew: episode.crew),
+          ),
+
+          const SizedBox(height: 8.0),
+
+          // Fecha de estreno
+          if (episode.airDate != null)
+            SizedBox(
+                width: 200,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.calendar_month_outlined,
+                      size: 30,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '${episode.airDate!.day.toString().padLeft(2, '0')}/${episode.airDate!.month.toString().padLeft(2, '0')}/${episode.airDate!.year.toString().padLeft(4, '0')}',
+                      style: textStyle.titleLarge,
+                    ),
+                  ],
+                )),
+
+          const SizedBox(height: 8.0),
+
+          // Duración
+          if (episode.runtime != null)
+            SizedBox(
+                width: 200,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.timer_outlined,
+                      size: 30,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '${episode.runtime} minutos',
+                      style: textStyle.titleLarge,
+                    ),
+                  ],
+                )),
+
+          const SizedBox(height: 15.0),
+
+          if (episode.guestStars != null && episode.guestStars.isNotEmpty) ...[
+            _GuestStars(actors: episode.guestStars),
+          ],
+          if (episode.crew != null && episode.crew.isNotEmpty) ...[
+            _Crew(crew: episode.crew),
+          ],
           const SizedBox(height: 20.0),
         ],
       ),
@@ -432,13 +452,14 @@ class _episodeType extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
 
-    return SizedBox(
-      width: 120,
-      child: Text(
+    return Chip(
+      backgroundColor: Colors.blueGrey[200],
+      labelPadding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+      label: Text(
         'Season Finale',
-        style: textStyle.titleMedium,
-        // textAlign: TextAlign.center,
+        style: textStyle.labelLarge!.copyWith(color: Colors.black87, fontSize: 18),
       ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
     );
   }
 }

@@ -48,7 +48,7 @@ class TVMapNotifier extends StateNotifier<Map<String, TV>> {
     }
 
     for (int i = 0; i < tv.seasons.length; i++) {
-      state['tvID']!.seasons.add(tv.seasons[i]);
+      state['tvID']?.seasons.add(tv.seasons[i]);
     }
   }
 }

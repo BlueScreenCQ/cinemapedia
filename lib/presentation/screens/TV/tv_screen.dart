@@ -1,5 +1,6 @@
 import 'package:cinemapedia/presentation/providers/watch_providers/watch_provider_by_tv_provider.dart';
 import 'package:cinemapedia/presentation/widgets/shared/actors_by_show.dart';
+import 'package:cinemapedia/presentation/widgets/shared/production_companies_by_show.dart';
 import 'package:cinemapedia/presentation/widgets/shared/snack_bar.dart';
 import 'package:cinemapedia/presentation/widgets/tv/season_expansion_panel_list.dart';
 import 'package:flutter/material.dart';
@@ -158,6 +159,7 @@ class _TVDetails extends StatelessWidget {
           child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -169,19 +171,23 @@ class _TVDetails extends StatelessWidget {
 
                 const SizedBox(height: 5.0),
 
+                if (tv.adult) Icon(Icons.explicit_outlined, color: Colors.red.shade800, size: 25),
+
+                const SizedBox(height: 5.0),
+
                 // Rating
                 SizedBox(
                   width: 120,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
                       const SizedBox(width: 2),
-                      Text(tv.voteAverage.toStringAsPrecision(2), style: textStyle.titleMedium?.copyWith(color: Colors.yellow.shade800)),
+                      Text(tv.voteAverage.toStringAsPrecision(2), style: textStyle.titleSmall?.copyWith(color: Colors.yellow.shade800)),
                       // const Spacer(),
                       const SizedBox(width: 15.0),
-                      Text(HumanFormats.number(tv.popularity), style: textStyle.titleMedium),
+                      Text(HumanFormats.intNumber(tv.voteCount), style: textStyle.titleSmall),
                     ],
                   ),
                 ),
@@ -202,7 +208,7 @@ class _TVDetails extends StatelessWidget {
                         const SizedBox(width: 5),
                         Text(
                           '${tv.firstAirDate!.day.toString().padLeft(2, '0')}/${tv.firstAirDate!.month.toString().padLeft(2, '0')}/${tv.firstAirDate!.year.toString().padLeft(4, '0')}',
-                          style: textStyle.titleMedium,
+                          style: textStyle.titleSmall,
                           maxLines: 2,
                           // textAlign: TextAlign.center,
                         ),
@@ -226,7 +232,7 @@ class _TVDetails extends StatelessWidget {
                         const SizedBox(width: 5),
                         Text(
                           '${tv.lastAirDate!.day.toString().padLeft(2, '0')}/${tv.lastAirDate!.month.toString().padLeft(2, '0')}/${tv.lastAirDate!.year.toString().padLeft(4, '0')}',
-                          style: textStyle.titleMedium,
+                          style: textStyle.titleSmall,
                           maxLines: 2,
                           // textAlign: TextAlign.center,
                         ),
@@ -234,16 +240,30 @@ class _TVDetails extends StatelessWidget {
                     ),
                   ),
 
-                if (tv.status != null && tv.status != "") _tvStatus(status: tv.status),
-
                 SizedBox(
                   width: 120,
-                  child: Text(
-                    'Idioma original: ${tv.originalLanguage.toUpperCase()}',
-                    style: textStyle.titleSmall,
-                    textAlign: TextAlign.start,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Icon(
+                        Icons.language_outlined,
+                        color: Colors.blueAccent,
+                        size: 20,
+                      ),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      Text(
+                        tv.originalLanguage.toUpperCase(),
+                        style: textStyle.titleSmall,
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
                   ),
                 ),
+
+                if (tv.status != null && tv.status != "") _tvStatus(status: tv.status),
 
                 SizedBox(
                   width: 120,
@@ -271,8 +291,8 @@ class _TVDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(tv.name, style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
-                  if (tv.name != tv.originalName) Text(tv.originalName, style: textStyle.titleMedium!.copyWith(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
-                  if (tv.tagline != null && tv.tagline != "") Text('"${tv.tagline}"', style: textStyle.titleMedium!.copyWith(fontStyle: FontStyle.italic)),
+                  if (tv.name != tv.originalName) Text(tv.originalName, style: textStyle.titleSmall!.copyWith(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+                  if (tv.tagline != null && tv.tagline != "") Text('"${tv.tagline}"', style: textStyle.titleSmall!.copyWith(fontStyle: FontStyle.italic)),
                   const SizedBox(height: 3.0),
                   // Text(movie.overview),
                   CustomReadMoreText(
@@ -285,14 +305,6 @@ class _TVDetails extends StatelessWidget {
           ]),
         ),
 
-        //PRODUCTORA
-        if (tv.productionCompanies != null && tv.productionCompanies != []) _ProductionCompaniesByTv(companies: tv.productionCompanies),
-        //PRODUCTORA
-
-        //PLATAFORMAS
-        _WatchProvidersByTv(movieID: tv.id.toString()),
-        //PLATAFORMAS
-
         //*Géneros
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -304,11 +316,24 @@ class _TVDetails extends StatelessWidget {
                     child: Chip(
                       label: Text(gender),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
                     ),
                   ))
             ],
           ),
         ),
+
+        //PRODUCTORA
+        if (tv.productionCompanies != null && tv.productionCompanies != []) ProductionCompaniesByShow(companies: tv.productionCompanies),
+        //PRODUCTORA
+
+        const SizedBox(height: 10.0),
+
+        //PLATAFORMAS
+        _WatchProvidersByTv(movieID: tv.id.toString()),
+        //PLATAFORMAS
+
+        const SizedBox(height: 10.0),
 
         if (tv.createdBy.isNotEmpty) _CreatedBy(tv: tv),
 
@@ -346,62 +371,37 @@ class _WatchProvidersByTv extends ConsumerWidget {
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        children: [
-          ...providers[movieID]!.map((provider) => Container(
-              margin: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                onTap: () => showProviderNameToast(context, provider.providerName),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    provider.logoPath,
-                    height: 40,
-                  ),
-                ),
-              )))
-        ],
-      ),
-    );
-  }
-}
-
-class _ProductionCompaniesByTv extends ConsumerWidget {
-  final List<WatchProvider> companies;
-  const _ProductionCompaniesByTv({required this.companies});
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final textStyle = Theme.of(context).textTheme;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        children: [
-          ...companies.map((provider) {
-            if (provider.logoPath == 'no-logo') return Container();
-
-            return Container(
-                margin: const EdgeInsets.only(right: 10),
-                child: GestureDetector(
-                  onTap: () => showProviderNameToast(context, provider.providerName),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      provider.logoPath,
-                      height: 40,
-                      width: 40,
-                      fit: BoxFit.contain,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20, top: 3, bottom: 5),
+          child: Text('Disponible en', style: textStyle.titleLarge),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            children: [
+              ...providers[movieID]!.map((provider) => Container(
+                  height: 40,
+                  width: 40,
+                  margin: const EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    onTap: () => showProviderNameToast(context, provider.providerName),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        provider.logoPath,
+                        height: 40,
+                      ),
                     ),
-                  ),
-                ));
-          })
-        ],
-      ),
+                  )))
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -476,18 +476,6 @@ class _Seasons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (tv.seasons == null || tv.seasons == []) return Container();
-
-    // return Text(tv.seasons[0].name);
-
-    // return SizedBox(
-    //   height: 300,
-    //   child: ListView.builder(
-    //     itemCount: tv.seasons.length,
-    //     itemBuilder: (BuildContext context, int i) {
-    //       return Text(tv.seasons[i].name);
-    //     },
-    //   ),
-    // );
 
     return SeasonExpansionPanelList(
       tvID: tv.id,

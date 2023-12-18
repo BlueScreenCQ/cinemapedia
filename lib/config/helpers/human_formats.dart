@@ -1,25 +1,28 @@
 import 'package:intl/intl.dart';
 
-
 class HumanFormats {
+  static String number(double number, [int decimals = 0]) {
+    final formattedNumber = NumberFormat.compactCurrency(decimalDigits: decimals, symbol: '', locale: 'es').format(number);
 
+    return formattedNumber;
+  }
 
-  static String number( double number, [int decimals = 0]  ) {
+  static String intNumber(int number) {
+    final formattedNumber = NumberFormat.compact(locale: 'es').format(number);
 
-    final formattedNumber = NumberFormat.compactCurrency(
-      decimalDigits: decimals,
-      symbol: '',
-      locale: 'es'
-    ).format(number);
+    return formattedNumber;
+  }
+
+  static String money(int number, [int decimals = 0]) {
+    final formattedNumber = NumberFormat.currency(decimalDigits: decimals, symbol: '\$', locale: 'es').format(number);
 
     return formattedNumber;
   }
 
   static String fechaCorta(DateTime date) {
-
     String formattedDate = '${date.day} ';
 
-    switch(date.month) {
+    switch (date.month) {
       case 1:
         formattedDate += 'ene';
         break;
@@ -60,6 +63,4 @@ class HumanFormats {
 
     return formattedDate;
   }
-
-
 }

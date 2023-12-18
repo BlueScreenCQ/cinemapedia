@@ -3,6 +3,7 @@ import 'package:cinemapedia/presentation/widgets/movies/similar_movies.dart';
 import 'package:cinemapedia/presentation/widgets/shared/actors_by_show.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_gradient.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_read_more_text.dart';
+import 'package:cinemapedia/presentation/widgets/shared/production_companies_by_show.dart';
 import 'package:cinemapedia/presentation/widgets/shared/snack_bar.dart';
 import 'package:cinemapedia/presentation/widgets/videos/videos_from_movie.dart';
 import 'package:flutter/material.dart';
@@ -155,6 +156,7 @@ class _MovieDetails extends StatelessWidget {
           child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -164,31 +166,22 @@ class _MovieDetails extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 5.0),
+                if (movie.adult) Icon(Icons.explicit_outlined, color: Colors.red.shade800, size: 25),
 
                 // Rating
                 SizedBox(
                   width: 120,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
                       const SizedBox(width: 2),
-                      Text(movie.voteAverage.toStringAsPrecision(2), style: textStyle.titleMedium?.copyWith(color: Colors.yellow.shade800)),
+                      Text(movie.voteAverage.toStringAsPrecision(2), style: textStyle.titleSmall?.copyWith(color: Colors.yellow.shade800)),
                       // const Spacer(),
                       const SizedBox(width: 15.0),
-                      Text(HumanFormats.number(movie.popularity), style: textStyle.titleMedium),
+                      Text(HumanFormats.intNumber(movie.voteCount), style: textStyle.titleSmall),
                     ],
-                  ),
-                ),
-
-                SizedBox(
-                  width: 120,
-                  child: Text(
-                    'Idioma original: ${movie.originalLanguage.toUpperCase()}',
-                    style: textStyle.titleSmall,
-                    textAlign: TextAlign.center,
                   ),
                 ),
 
@@ -196,12 +189,108 @@ class _MovieDetails extends StatelessWidget {
                 if (movie.releaseDate != null)
                   SizedBox(
                     width: 120,
-                    child: Text(
-                      '${movie.releaseDate!.day.toString().padLeft(2, '0')}/${movie.releaseDate!.month.toString().padLeft(2, '0')}/${movie.releaseDate!.year.toString().padLeft(4, '0')}',
-                      style: textStyle.titleMedium,
-                      textAlign: TextAlign.center,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.calendar_month_outlined,
+                          color: Colors.green,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          '${movie.releaseDate!.day.toString().padLeft(2, '0')}/${movie.releaseDate!.month.toString().padLeft(2, '0')}/${movie.releaseDate!.year.toString().padLeft(4, '0')}',
+                          style: textStyle.titleSmall,
+                          maxLines: 2,
+                          // textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   ),
+
+                SizedBox(
+                  width: 120,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Icon(
+                        Icons.language_outlined,
+                        color: Colors.blueAccent,
+                        size: 20,
+                      ),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      Text(
+                        movie.originalLanguage.toUpperCase(),
+                        style: textStyle.titleSmall,
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Duración
+                if (movie.runtime != null)
+                  SizedBox(
+                      width: 120,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.timer_outlined,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            '${movie.runtime} minutos',
+                            style: textStyle.titleSmall,
+                          ),
+                        ],
+                      )),
+
+                // Presupuesto
+                if (movie.budget != null && movie.budget != 0)
+                  SizedBox(
+                      width: 120,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.payment_outlined,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            HumanFormats.money(movie.budget!),
+                            style: textStyle.titleSmall,
+                          ),
+                        ],
+                      )),
+
+                // Recaudación
+                if (movie.revenue != null && movie.revenue != 0)
+                  SizedBox(
+                      width: 120,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.confirmation_num_outlined,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            HumanFormats.money(movie.revenue!),
+                            style: textStyle.titleSmall,
+                          ),
+                        ],
+                      )),
               ],
             ),
             const SizedBox(width: 10),
@@ -211,22 +300,20 @@ class _MovieDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(movie.title, style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
-                  if (movie.title != movie.originalTitle) Text(movie.originalTitle, style: textStyle.titleMedium!.copyWith(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+                  if (movie.title != movie.originalTitle) Text(movie.originalTitle, style: textStyle.titleSmall!.copyWith(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+                  if (movie.tagline != null && movie.tagline != "") Text('"${movie.tagline}"', style: textStyle.titleSmall!.copyWith(fontStyle: FontStyle.italic)),
                   const SizedBox(height: 3.0),
                   // Text(movie.overview),
                   CustomReadMoreText(
                     text: movie.overview,
                     trimLines: 8,
+                    textStyle: textStyle.bodyLarge,
                   ),
                 ],
               ),
             ),
           ]),
         ),
-
-        //PLATAFORMAS//
-        _WatchProvidersByMovie(movieID: movie.id.toString()),
-        //PLATAFORMAS//
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -238,11 +325,24 @@ class _MovieDetails extends StatelessWidget {
                     child: Chip(
                       label: Text(gender),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
                     ),
                   ))
             ],
           ),
         ),
+
+        //PRODUCTORA
+        if (movie.productionCompanies != null && movie.productionCompanies != []) ProductionCompaniesByShow(companies: movie.productionCompanies!),
+        //PRODUCTORA
+
+        const SizedBox(height: 10.0),
+
+        //PLATAFORMAS//
+        _WatchProvidersByMovie(movieID: movie.id.toString()),
+        //PLATAFORMAS//
+
+        const SizedBox(height: 10.0),
 
         //Actores
         ActorsByShow(showId: movie.id.toString()),
@@ -276,25 +376,34 @@ class _WatchProvidersByMovie extends ConsumerWidget {
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        children: [
-          ...providers[movieID]!.map((provider) => Container(
-              margin: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                onTap: () => showProviderNameToast(context, provider.providerName),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    provider.logoPath,
-                    height: 40,
-                  ),
-                ),
-              )))
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20, top: 3, bottom: 5),
+          child: Text('Disponible en', style: textStyle.titleLarge),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            children: [
+              ...providers[movieID]!.map((provider) => Container(
+                  height: 40,
+                  width: 40,
+                  margin: const EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    onTap: () => showProviderNameToast(context, provider.providerName),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(provider.logoPath, height: 40, fit: BoxFit.contain),
+                    ),
+                  )))
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

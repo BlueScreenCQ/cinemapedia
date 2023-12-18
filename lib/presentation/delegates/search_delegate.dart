@@ -130,6 +130,7 @@ class _MovieSearchItem extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               width: size.width * 0.2,
@@ -147,13 +148,15 @@ class _MovieSearchItem extends StatelessWidget {
             SizedBox(
               width: size.width * 0.7,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                       // movie.mediaType == 'movie' ? movie.title : movie.name!,
                       movie.title != "" ? movie.title : movie.name!,
                       style: textStyles.titleMedium),
-                  (movie.overview.length >= 130) ? Text('${movie.overview.substring(0, 130)}...') : Text(movie.overview),
+                  (movie.overview.length >= 150) ? Text('${movie.overview.substring(0, 150)}...') : Text(movie.overview),
+                  SizedBox(height: 5.0),
                   Row(
                     children: [
                       if (movie.releaseDate != null) ...[

@@ -36,7 +36,7 @@ class TVMapper {
                 id: season.id,
                 name: season.name,
                 overview: season.overview,
-                posterPath: (season.posterPath != '') ? 'https://image.tmdb.org/t/p/w500${season.posterPath}' : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+                posterPath: (season.posterPath != '') ? 'https://image.tmdb.org/t/p/w500${season.posterPath}' : 'https://image.tmdb.org/t/p/w500${movieDB.posterPath}',
                 seasonNumber: season.seasonNumber,
                 voteAverage: season.voteAverage,
                 episodes: []))

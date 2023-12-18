@@ -57,8 +57,9 @@ class _SeasonExpansionPanelListState extends State<SeasonExpansionPanelList> {
   }
 
   Widget _buildPanel() {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     final textStyle = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
 
     return ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
@@ -129,15 +130,29 @@ class _SeasonExpansionPanelListState extends State<SeasonExpansionPanelList> {
                               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 //Caputra del capítulo
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    item.stillPath,
-                                    width: 220,
-                                    height: 124,
-                                    // width: 180,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: (item.stillPath != 'no-poster')
+                                        ? Image.network(
+                                            item.stillPath,
+                                            width: 220,
+                                            height: 124,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : SizedBox(
+                                            width: 220,
+                                            height: 124,
+                                            child: DecoratedBox(
+                                              decoration: BoxDecoration(
+                                                color: colors.secondaryContainer,
+                                              ),
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.live_tv_outlined,
+                                                  size: 60,
+                                                ),
+                                              ),
+                                            ),
+                                          )),
 
                                 const SizedBox(height: 5),
 

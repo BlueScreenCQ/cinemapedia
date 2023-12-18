@@ -18,7 +18,7 @@ class EpisodeMapper {
         runtime: movieDB.runtime,
         seasonNumber: movieDB.seasonNumber,
         showId: movieDB.showId,
-        stillPath: (movieDB.stillPath != '') ? 'https://image.tmdb.org/t/p/w500${movieDB.stillPath}' : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+        stillPath: (movieDB.stillPath != '') ? 'https://image.tmdb.org/t/p/w500${movieDB.stillPath}' : 'no-poster',
         guestStars: movieDB.guestStars
             .map<Actor>((Cast e) => Actor(
                 id: e.id,

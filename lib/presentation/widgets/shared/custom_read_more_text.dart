@@ -19,8 +19,10 @@ class CustomReadMoreText extends StatelessWidget {
       colorClickableText: colors.primary,
       trimMode: TrimMode.Line,
       style: (textStyle != null) ? textStyle : textStyleFromContext.bodyMedium,
-      trimCollapsedText: ' Mostrar  más >>',
-      trimExpandedText: ' << Mostrar menos',
+      textAlign: TextAlign.justify,
+      trimCollapsedText: ' Mostrar  más',
+      trimExpandedText: ' Mostrar menos',
+
       // moreStyle: textStyle.bodySmall,
     );
   }

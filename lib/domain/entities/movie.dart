@@ -1,3 +1,4 @@
+import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:isar/isar.dart';
 
 part 'movie.g.dart';
@@ -8,15 +9,23 @@ class Movie {
 
   final bool adult;
   final String backdropPath;
+  // final MovieCollection? belongsToCollection;
+  final int? budget;
   final List<String> genreIds;
   final int id;
+  final String? imdbId;
   final String originalLanguage;
   final String originalTitle;
   final String overview;
   final double popularity;
   final String posterPath;
   final DateTime? releaseDate;
+  final int? revenue;
+  final int? runtime;
+  final String? status;
   final String title;
+  final List<WatchProvider>? productionCompanies;
+  final String? tagline;
   final bool video;
   final double voteAverage;
   final int voteCount;
@@ -33,14 +42,22 @@ class Movie {
   Movie(
       {required this.adult,
       required this.backdropPath,
+      // this.belongsToCollection,
+      this.budget,
       required this.genreIds,
       required this.id,
+      this.imdbId,
       required this.originalLanguage,
       required this.originalTitle,
       required this.overview,
       required this.popularity,
       required this.posterPath,
+      this.productionCompanies,
       this.releaseDate,
+      this.revenue,
+      this.runtime,
+      this.status,
+      this.tagline,
       required this.title,
       required this.video,
       required this.voteAverage,

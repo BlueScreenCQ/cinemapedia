@@ -53,7 +53,7 @@ class _VideosListState extends State<_VideosList> {
 
   @override
   Widget build(BuildContext context) {
-    // final textStyle = Theme.of(context).textTheme;
+    final textStyle = Theme.of(context).textTheme;
 
     //* Nada que mostrar
     if (widget.videos.isEmpty) {
@@ -65,10 +65,10 @@ class _VideosListState extends State<_VideosList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 20, bottom: 3),
-          //   child: Text('Videos', style: textStyle.titleLarge),
-          // ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text('Videos', style: textStyle.titleLarge),
+          ),
           Expanded(
             child: ListView.builder(
                 controller: scrollController,
@@ -129,7 +129,7 @@ class _YouTubeVideoPlayerState extends State<_YouTubeVideoPlayer> {
       flags: const YoutubePlayerFlags(
         hideThumbnail: true,
         showLiveFullscreenButton: false,
-        mute: false,
+        mute: true,
         autoPlay: false,
         disableDragSeek: true,
         loop: false,
@@ -151,7 +151,7 @@ class _YouTubeVideoPlayerState extends State<_YouTubeVideoPlayer> {
     final size = MediaQuery.of(context).size;
 
     return Padding(
-        padding: const EdgeInsets.only(left: 10, top: 10),
+        padding: EdgeInsets.only(left: size.width * 0.05),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

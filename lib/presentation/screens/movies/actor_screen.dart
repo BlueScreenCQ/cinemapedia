@@ -82,26 +82,7 @@ class _ActorDetails extends StatelessWidget {
                     width: size.width * 0.3,
                   ),
                 ),
-
                 const SizedBox(height: 8.0),
-
-                // // Rating
-                // SizedBox(
-                //   width: 120,
-                //   child: Row(
-                //     crossAxisAlignment: CrossAxisAlignment.end,
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
-                //       const SizedBox(width: 2),
-                //       Text(movie.voteAverage.toStringAsPrecision(2), style: textStyle.titleMedium?.copyWith(color: Colors.yellow.shade800)),
-                //       // const Spacer(),
-                //       const SizedBox(width: 15.0),
-                //       Text('${HumanFormats.number(movie.popularity)}', style: textStyle.titleMedium),
-                //     ],
-                //   ),
-                // ),
-
                 SizedBox(
                   width: 120,
                   child: Row(
@@ -112,13 +93,12 @@ class _ActorDetails extends StatelessWidget {
                       const SizedBox(width: 5),
                       Text(
                         '${actor.birthday!.day.toString().padLeft(2, '0')}/${actor.birthday!.month.toString().padLeft(2, '0')}/${actor.birthday!.year.toString().padLeft(4, '0')}',
-                        style: textStyle.titleMedium,
+                        style: textStyle.titleSmall,
                         // textAlign: TextAlign.center,
                       ),
                     ],
                   ),
                 ),
-
                 if (actor.deatday != null)
                   SizedBox(
                     width: 120,
@@ -133,7 +113,7 @@ class _ActorDetails extends StatelessWidget {
                         const SizedBox(width: 5),
                         Text(
                           '${actor.deatday!.day.toString().padLeft(2, '0')}/${actor.deatday!.month.toString().padLeft(2, '0')}/${actor.deatday!.year.toString().padLeft(4, '0')}',
-                          style: textStyle.titleMedium,
+                          style: textStyle.titleSmall,
                           maxLines: 2,
                           // textAlign: TextAlign.center,
                         ),
@@ -187,6 +167,7 @@ class _ActorDetails extends StatelessWidget {
                   CustomReadMoreText(
                     text: actor.biography!,
                     trimLines: 8,
+                    textStyle: textStyle.bodyLarge,
                   ),
                 ],
               ),

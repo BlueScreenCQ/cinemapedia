@@ -1,8 +1,8 @@
 class MovieDetails {
   final bool adult;
   final String backdropPath;
-  final BelongsToCollection? belongsToCollection;
-  final int budget; //TODO Añadir
+  final Collection? belongsToCollection;
+  final int budget;
   final List<Genre> genres;
   final String homepage;
   final int id;
@@ -15,7 +15,7 @@ class MovieDetails {
   final List<ProductionCompany> productionCompanies;
   final List<ProductionCountry> productionCountries;
   final DateTime releaseDate;
-  final int revenue; //TODO Añadir
+  final int revenue;
   final int runtime;
   final List<SpokenLanguage> spokenLanguages;
   final String status;
@@ -56,7 +56,7 @@ class MovieDetails {
   factory MovieDetails.fromJson(Map<String, dynamic> json) => MovieDetails(
         adult: json["adult"],
         backdropPath: json["backdrop_path"] ?? '',
-        belongsToCollection: json["belongs_to_collection"] == null ? null : BelongsToCollection.fromJson(json["belongs_to_collection"]),
+        belongsToCollection: json["belongs_to_collection"] == null ? null : Collection.fromJson(json["belongs_to_collection"]),
         budget: json["budget"],
         genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
         homepage: json["homepage"],
@@ -110,8 +110,8 @@ class MovieDetails {
       };
 }
 
-class BelongsToCollection {
-  BelongsToCollection({
+class Collection {
+  Collection({
     required this.id,
     required this.name,
     required this.posterPath,
@@ -123,7 +123,7 @@ class BelongsToCollection {
   final String? posterPath;
   final String? backdropPath;
 
-  factory BelongsToCollection.fromJson(Map<String, dynamic> json) => BelongsToCollection(
+  factory Collection.fromJson(Map<String, dynamic> json) => Collection(
         id: json["id"],
         name: json["name"],
         posterPath: json["poster_path"] ?? '',

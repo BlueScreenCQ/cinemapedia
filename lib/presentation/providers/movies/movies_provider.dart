@@ -36,9 +36,16 @@ class MoviesNotifier extends StateNotifier<List<Movie>> {
 
     isLoading = true;
 
-    currentPage++;
+    final List<Movie> movies = [];
 
-    final List<Movie> movies = await fetchMoreMovies(page: currentPage);
+    //Esto lo hacemos para poblar la lista de pelis Próximamente, ya que viene con fecha de estreno +- 1 mes
+    //Si quitamos las que ya están estrenadas puede quedarse la lista vacía
+
+    while (movies.length < 5) {
+      currentPage++;
+      final List<Movie> tempMovies = await fetchMoreMovies(page: currentPage);
+      movies.addAll(tempMovies);
+    }
 
     state = [...state, ...movies];
 
