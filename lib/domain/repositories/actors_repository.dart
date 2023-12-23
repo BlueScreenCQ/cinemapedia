@@ -6,4 +6,5 @@ abstract class ActorRepository {
   Future<Map<String, List<dynamic>>> getActorsByTV(String tvId);
   Future<Actor> getActorById(String id);
   Future<Map<String, List<Movie>>> getCombinedCreditsOfActor(String id);
+  Future<List<Actor>> searchActors(String query);
 }

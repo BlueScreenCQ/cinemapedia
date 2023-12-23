@@ -6,6 +6,7 @@ import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/infrastructure/mappers/actor_mapper.dart';
 import 'package:cinemapedia/infrastructure/mappers/combined_credit_mapper.dart';
 import 'package:cinemapedia/infrastructure/mappers/crew_mapper.dart';
+import 'package:cinemapedia/infrastructure/models/moviedb/actors_moviedb_response.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/combined_credits_response.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/credits_response.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_person_response.dart';
@@ -67,5 +68,18 @@ class ActorMovieDbDatasource extends ActorDatasource {
     Map<String, List<Movie>> combinedCredits = <String, List<Movie>>{'Cast': cast, 'Crew': crew};
 
     return combinedCredits;
+  }
+
+  @override
+  Future<List<Actor>> searchActors(String query) async {
+    if (query.isEmpty) return [];
+
+    final response = await dio.get('/search/person', queryParameters: {'query': query});
+
+    final castResponse = ActorsMovieDbResponse.fromJson(response.data);
+
+    List<Actor> actors = castResponse.results.map((actor) => ActorMapper.castToEntity(actor)).toList();
+
+    return actors;
   }
 }

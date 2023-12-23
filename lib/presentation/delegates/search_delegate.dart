@@ -1,24 +1,64 @@
 import 'dart:async';
-import 'package:cinemapedia/config/helpers/human_formats.dart';
+// import 'package:cinemapedia/config/helpers/human_formats.dart';
+import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:cinemapedia/presentation/providers/search/search_provider.dart';
+import 'package:cinemapedia/presentation/widgets/shared/choice_chip.dart';
 import 'package:flutter/material.dart';
-import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/search_item.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-typedef SearchMovieCallback = Future<List<Movie>> Function(String query);
+typedef SearchCallback = Future<List<SearchItem>> Function(String query);
 
-class SearchMovieDelegate extends SearchDelegate<Movie?> {
-  final SearchMovieCallback searchMovies;
-  List<Movie> initialMovies;
-  StreamController<List<Movie>> debounceMovies = StreamController.broadcast();
+class CustomSearchDelegate extends SearchDelegate<SearchItem?> {
+  final WidgetRef ref;
+
+  int? searchType;
+  SearchCallback? searchCallback;
+  List<SearchItem> initialItems = [];
+  List<SearchItem> searchedItems = [];
+  String searchQuery = '';
+  String customSearchFieldLabel = '';
+
+  StreamController<List<SearchItem>> debounceItems = StreamController.broadcast();
   StreamController<bool> isLoading = StreamController.broadcast();
-  bool esTv;
 
   Timer? _debounceTimer;
 
-  SearchMovieDelegate({required this.searchMovies, required this.initialMovies, this.esTv = false});
+  CustomSearchDelegate({required this.ref}) {
+    searchType = ref.read(searchProvider.notifier).state;
+
+    switch (searchType) {
+      case 0: //Pelis
+        searchedItems = ref.read(searchedMoviesProvider);
+        searchQuery = ref.read(searchQueryProvider);
+        searchCallback = ref.read(searchedMoviesProvider.notifier).searchMoviesByQuery;
+        customSearchFieldLabel = "Buscar películas";
+        break;
+      case 1: //Series
+        searchedItems = ref.read(searchedTVProvider);
+        searchQuery = ref.read(searchQueryProvider);
+        searchCallback = ref.read(searchedTVProvider.notifier).searchMoviesByQuery;
+        customSearchFieldLabel = "Buscar series y TV";
+        break;
+      case 2: //Actores
+        searchedItems = ref.read(searchedActorsProvider);
+        searchQuery = ref.read(searchQueryProvider);
+        searchCallback = ref.read(searchedActorsProvider.notifier).searchActorsByQuery;
+        customSearchFieldLabel = "Buscar actores y reparto";
+        break;
+      default: //Ponemos pelis para que no se queje el Callback pero es imposible que pase a priori
+        searchedItems = ref.read(searchedMoviesProvider);
+        searchQuery = ref.read(searchQueryProvider);
+        searchCallback = ref.read(searchedMoviesProvider.notifier).searchMoviesByQuery;
+        customSearchFieldLabel = "Buscar películas";
+        break;
+    }
+  }
 
   void clearStream() {
-    debounceMovies.close();
+    debounceItems.close();
     isLoading.close();
   }
 
@@ -33,33 +73,45 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       //   return;
       // }
 
-      final movies = await searchMovies(query);
+      final items = await searchCallback!(query);
 
-      debounceMovies.add(movies);
-      initialMovies = movies;
+      debounceItems.add(items);
+      initialItems = items;
 
       isLoading.add(false);
     });
   }
 
   @override
-  String get searchFieldLabel => (esTv) ? 'Buscar TV y series' : 'Buscar películas';
+  String get searchFieldLabel => customSearchFieldLabel;
 
   Widget buildResultsAndSuggestions() {
     return StreamBuilder(
-      initialData: initialMovies,
-      stream: debounceMovies.stream,
+      initialData: initialItems,
+      stream: debounceItems.stream,
       builder: (context, snapshot) {
         final movies = snapshot.data ?? [];
 
-        return ListView.builder(
-            itemCount: movies.length,
-            itemBuilder: (context, index) => _MovieSearchItem(
-                movie: movies[index],
-                onMovieSelected: (context, movie) {
-                  clearStream();
-                  close(context, movie);
-                }));
+        return Column(
+          children: [
+            SizedBox(
+              height: 50.0,
+              child: CustomChoiceChip(
+                items: const ['Películas', 'Series y TV', 'Personas'],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: movies.length,
+                  itemBuilder: (context, index) => _SearchItem(
+                      item: movies[index],
+                      onMovieSelected: (context, movie) {
+                        clearStream();
+                        close(context, movie);
+                      })),
+            ),
+          ],
+        );
       },
     );
   }
@@ -112,11 +164,11 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   }
 }
 
-class _MovieSearchItem extends StatelessWidget {
-  final Movie movie;
+class _SearchItem extends StatelessWidget {
+  final SearchItem item;
   final Function onMovieSelected;
 
-  const _MovieSearchItem({required this.movie, required this.onMovieSelected});
+  const _SearchItem({required this.item, required this.onMovieSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +177,7 @@ class _MovieSearchItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        onMovieSelected(context, movie);
+        onMovieSelected(context, item);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
@@ -139,7 +191,7 @@ class _MovieSearchItem extends StatelessWidget {
                 child: FadeInImage(
                   height: 130,
                   fit: BoxFit.cover,
-                  image: NetworkImage(movie.posterPath),
+                  image: NetworkImage(item.sImage),
                   placeholder: const AssetImage('assets/loaders/bottle-loader.gif'),
                 ),
               ),
@@ -151,43 +203,31 @@ class _MovieSearchItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                      // movie.mediaType == 'movie' ? movie.title : movie.name!,
-                      movie.title != "" ? movie.title : movie.name!,
-                      style: textStyles.titleMedium),
-                  (movie.overview.length >= 150) ? Text('${movie.overview.substring(0, 150)}...') : Text(movie.overview),
-                  SizedBox(height: 5.0),
+                  Text(item.sName, style: textStyles.titleMedium),
+                  (item.sText.length >= 150) ? Text('${item.sText.substring(0, 150)}...') : Text(item.sText),
+                  const SizedBox(height: 5.0),
                   Row(
                     children: [
-                      if (movie.releaseDate != null) ...[
+                      if (item.sDate != null) ...[
                         const Icon(Icons.calendar_month_outlined),
                         const SizedBox(width: 2),
                         Padding(
                           padding: const EdgeInsets.only(top: 3.0),
-                          child: Text('${movie.releaseDate!.year}'),
+                          child: Text('${item.sDate!.year}'),
                         ),
                         const SizedBox(width: 15.0),
                       ],
-                      if (movie.firstAirDate != null) ...[
-                        const Icon(Icons.calendar_month_outlined),
-                        const SizedBox(width: 2),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 3.0),
-                          child: Text('${movie.firstAirDate!.year}'),
-                        ),
-                        const SizedBox(width: 15.0),
-                      ],
-                      if (movie.voteCount > 0) ...[
-                        Icon(Icons.star_half_rounded, color: Colors.yellow.shade800),
-                        const SizedBox(width: 2),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 3),
-                          child: Text(
-                            HumanFormats.number(movie.voteAverage, 2),
-                            style: textStyles.bodyMedium!.copyWith(color: Colors.yellow.shade800),
-                          ),
-                        )
-                      ]
+                      // if (item.voteCount > 0) ...[
+                      //   Icon(Icons.star_half_rounded, color: Colors.yellow.shade800),
+                      //   const SizedBox(width: 2),
+                      //   Padding(
+                      //     padding: const EdgeInsets.only(top: 3),
+                      //     child: Text(
+                      //       HumanFormats.number(item.voteAverage, 2),
+                      //       style: textStyles.bodyMedium!.copyWith(color: Colors.yellow.shade800),
+                      //     ),
+                      //   )
+                      // ]
                     ],
                   )
                 ],

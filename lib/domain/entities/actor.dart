@@ -1,4 +1,6 @@
-class Actor {
+import 'package:cinemapedia/domain/entities/search_item.dart';
+
+class Actor extends SearchItem {
   final int id;
   final String name;
   final String profilePath;
@@ -22,5 +24,6 @@ class Actor {
       required this.id,
       required this.name,
       required this.profilePath,
-      required this.character});
+      required this.character})
+      : super(sId: id, sName: name, sImage: profilePath, sText: biography ?? '', sDate: birthday, isActor: true);
 }

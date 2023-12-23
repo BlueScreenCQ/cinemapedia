@@ -1,10 +1,11 @@
+import 'package:cinemapedia/domain/entities/search_item.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:isar/isar.dart';
 
 part 'movie.g.dart';
 
 @collection
-class Movie {
+class Movie extends SearchItem {
   Id? isarId;
 
   final bool adult;
@@ -68,5 +69,13 @@ class Movie {
       this.firstAirDate,
       this.episodeCount,
       this.department,
-      this.job});
+      this.job})
+      : super(
+            sId: id,
+            sName: (name != null && name != '') ? name! : title,
+            sImage: posterPath,
+            sText: overview,
+            sDate: releaseDate ?? firstAirDate,
+            isPeli: (name != '') ? false : true,
+            isTV: (name != '') ? true : false);
 }

@@ -27,4 +27,9 @@ class ActorRepositoryImp extends ActorRepository {
   Future<Map<String, List<Movie>>> getCombinedCreditsOfActor(String id) {
     return datasource.getCombinedCreditsOfActor(id);
   }
+
+  @override
+  Future<List<Actor>> searchActors(String query) {
+    return datasource.searchActors(query);
+  }
 }
