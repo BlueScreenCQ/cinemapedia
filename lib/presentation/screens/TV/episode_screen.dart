@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/crew.dart';
-import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:animate_do/animate_do.dart';
 
 import 'package:cinemapedia/presentation/providers/providers.dart';
@@ -233,19 +232,20 @@ class _EpisodeDetails extends StatelessWidget {
           const SizedBox(height: 8.0),
 
           // Rating
-          SizedBox(
-            width: 300,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 30),
-                const SizedBox(width: 2),
-                Text(tv.voteAverage.toStringAsPrecision(2), style: textStyle.titleLarge?.copyWith(color: Colors.yellow.shade800)),
-                // Text('${HumanFormats.intNumber(tv.voteCount)} veces valorado', style: textStyle.titleLarge),
-              ],
+          if (episode.voteAverage != null && episode.voteAverage != 0)
+            SizedBox(
+              width: 300,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 30),
+                  const SizedBox(width: 2),
+                  Text(episode.voteAverage.toStringAsPrecision(2), style: textStyle.titleLarge?.copyWith(color: Colors.yellow.shade800)),
+                  // Text('${HumanFormats.intNumber(tv.voteCount)} veces valorado', style: textStyle.titleLarge),
+                ],
+              ),
             ),
-          ),
 
           const SizedBox(height: 8.0),
 

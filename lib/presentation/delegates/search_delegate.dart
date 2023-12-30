@@ -94,10 +94,10 @@ class CustomSearchDelegate extends SearchDelegate<SearchItem?> {
 
         return Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50.0,
               child: CustomChoiceChip(
-                items: const ['Películas', 'Series y TV', 'Personas'],
+                items: ['Películas', 'Series y TV', 'Personas'],
               ),
             ),
             Expanded(

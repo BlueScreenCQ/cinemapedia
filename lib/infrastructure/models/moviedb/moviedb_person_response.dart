@@ -20,7 +20,7 @@ class Person {
   final String imdbId;
   final String knownForDepartment;
   final String name;
-  final String placeOfBirth;
+  final String? placeOfBirth;
   final double popularity;
   final String profilePath;
 

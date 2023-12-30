@@ -146,23 +146,24 @@ class _ActorDetails extends StatelessWidget {
                     ],
                   ),
                   // Lugar de nacimiento
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Icon(Icons.place_outlined, size: 20),
-                      const SizedBox(width: 3),
-                      Expanded(
-                        child: Text(
-                          actor.placeOfBirth!,
-                          style: textStyle.titleSmall,
-                          textAlign: TextAlign.start,
-                          maxLines: 2,
-                          overflow: TextOverflow.clip,
+                  if (actor.placeOfBirth != null && actor.placeOfBirth != '')
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.place_outlined, size: 20),
+                        const SizedBox(width: 3),
+                        Expanded(
+                          child: Text(
+                            actor.placeOfBirth!,
+                            style: textStyle.titleSmall,
+                            textAlign: TextAlign.start,
+                            maxLines: 2,
+                            overflow: TextOverflow.clip,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                   const SizedBox(height: 3.0),
                   CustomReadMoreText(
                     text: actor.biography!,
@@ -373,7 +374,7 @@ class _CombinedCreditsByActor extends ConsumerWidget {
         if (crew!.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.only(left: 20, bottom: 3),
-            child: Text('Equipo de producción', style: textStyle.titleLarge),
+            child: Text('Detrás de las cámaras', style: textStyle.titleLarge),
           ),
 
           //Crew
