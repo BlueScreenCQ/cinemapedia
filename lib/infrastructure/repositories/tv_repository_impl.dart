@@ -40,7 +40,7 @@ class TVRepositoryImpl extends TVRepository {
   }
 
   @override
-  Future<Map<String, List<WatchProvider>>> getTvWatchProviderById(String tvId) {
+  Future<Map<String, Map<String, List<WatchProvider>>>> getTvWatchProviderById(String tvId) {
     return datasource.getTvWatchProviderById(tvId);
   }
 

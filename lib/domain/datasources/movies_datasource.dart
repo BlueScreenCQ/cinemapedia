@@ -19,5 +19,5 @@ abstract class MovieDatasource {
 
   Future<List<Video>> getYoutubeVideosById(int movieId);
 
-  Future<Map<String, List<WatchProvider>>> getWatchProviderById(String movieId);
+  Future<Map<String, Map<String, List<WatchProvider>>>> getWatchProviderById(String movieId);
 }

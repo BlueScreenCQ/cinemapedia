@@ -49,7 +49,7 @@ class MovieRepositoryImpl extends MovieRepository {
   }
 
   @override
-  Future<Map<String, List<WatchProvider>>> getWatchProviderById(String movieId) {
+  Future<Map<String, Map<String, List<WatchProvider>>>> getWatchProviderById(String movieId) {
     return datasource.getWatchProviderById(movieId);
   }
 }

@@ -111,7 +111,7 @@ class MoviedbDatasource extends MovieDatasource {
   }
 
   @override
-  Future<Map<String, List<WatchProvider>>> getWatchProviderById(String movieId) async {
+  Future<Map<String, Map<String, List<WatchProvider>>>> getWatchProviderById(String movieId) async {
     final response = await dio.get('/movie/$movieId/watch/providers');
 
     // print('Esta es la respuesta');
@@ -122,7 +122,7 @@ class MoviedbDatasource extends MovieDatasource {
 
     final WatchProvidersResponse moviedbProvidersReponse = WatchProvidersResponse.fromJson(response.data['results']['ES']);
 
-    Map<String, List<WatchProvider>> watchProviders = {};
+    Map<String, Map<String, List<WatchProvider>>> watchProviders = {};
 
     watchProviders[movieId] = WatchProviderMapper.watchProviderToEntity(moviedbProvidersReponse);
 

@@ -2,7 +2,7 @@ import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinemapedia/presentation/providers/watch_providers/watch_provider_repository_provider.dart';
 
-final watchProviderByMovieProvider = StateNotifierProvider<WatchProviderByMovieNotifier, Map<String, Map<String, List<WatchProvider>>>>((ref) {
+final watchProviderByMovieProvider = StateNotifierProvider<WatchProviderByMovieNotifier, Map<String, Map<String, Map<String, List<WatchProvider>>>>>((ref) {
   final watchProviderRepository = ref.watch(watchProviderRepositoryProvider);
 
   return WatchProviderByMovieNotifier(getWatchProviders: watchProviderRepository.getWatchProviderById);
@@ -18,9 +18,9 @@ final watchProviderByMovieProvider = StateNotifierProvider<WatchProviderByMovieN
 }
 */
 
-typedef GetWatchProvidersCallback = Future<Map<String, List<WatchProvider>>> Function(String movieID);
+typedef GetWatchProvidersCallback = Future<Map<String, Map<String, List<WatchProvider>>>> Function(String movieID);
 
-class WatchProviderByMovieNotifier extends StateNotifier<Map<String, Map<String, List<WatchProvider>>>> {
+class WatchProviderByMovieNotifier extends StateNotifier<Map<String, Map<String, Map<String, List<WatchProvider>>>>> {
   final GetWatchProvidersCallback getWatchProviders;
 
   WatchProviderByMovieNotifier({required this.getWatchProviders}) : super({});

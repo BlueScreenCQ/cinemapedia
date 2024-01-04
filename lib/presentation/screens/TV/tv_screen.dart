@@ -360,7 +360,7 @@ class _WatchProvidersByTv extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    Map<String, List<WatchProvider>> providers = ref.watch(watchProviderByTvProvider)[movieID] ?? {};
+    Map<String, Map<String, List<WatchProvider>>> providers = ref.watch(watchProviderByTvProvider)[movieID] ?? {};
 
     final textStyle = Theme.of(context).textTheme;
 
@@ -384,7 +384,7 @@ class _WatchProvidersByTv extends ConsumerWidget {
           child: Wrap(
             alignment: WrapAlignment.spaceBetween,
             children: [
-              ...providers[movieID]!.map((provider) => Container(
+              ...providers[movieID]!['flatrate']!.map((provider) => Container(
                   height: 40,
                   width: 40,
                   margin: const EdgeInsets.only(right: 10),

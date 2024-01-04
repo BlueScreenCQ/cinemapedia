@@ -365,11 +365,11 @@ class _WatchProvidersByMovie extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    Map<String, List<WatchProvider>> providers = ref.watch(watchProviderByMovieProvider)[movieID] ?? {};
+    Map<String, Map<String, List<WatchProvider>>> providers = ref.watch(watchProviderByMovieProvider)[movieID] ?? {};
 
     final textStyle = Theme.of(context).textTheme;
 
-    if (providers[movieID] == null) {
+    if (providers[movieID] == null || ((providers[movieID]!['buy']!.isEmpty) && (providers[movieID]!['rent']!.isEmpty) && (providers[movieID]!['flatrate']!.isEmpty))) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: Text('No disponible en ninguna plataforma', style: textStyle.bodyMedium!.copyWith(color: Colors.red)),
@@ -380,30 +380,73 @@ class _WatchProvidersByMovie extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 3, bottom: 5),
-          child: Text('Disponible en', style: textStyle.titleLarge),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            children: [
-              ...providers[movieID]!.map((provider) => Container(
-                  height: 40,
-                  width: 40,
-                  margin: const EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                    onTap: () => showProviderNameToast(context, provider.providerName),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(provider.logoPath, height: 40, fit: BoxFit.contain),
-                    ),
-                  )))
-            ],
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 20, top: 3, bottom: 5),
+        //   child: Text('Disponible en', style: textStyle.titleLarge),
+        // ),
+
+        if (providers[movieID]!['flatrate']!.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 5, bottom: 2),
+            child: Text('Disponible en', style: textStyle.titleLarge),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2.0),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              children: [...providers[movieID]!['flatrate']!.map((provider) => _WatchProviderIcon(provider: provider))],
+            ),
+          ),
+        ],
+
+        if (providers[movieID]!['buy']!.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 3, bottom: 2),
+            child: Text('Comprar', style: textStyle.titleLarge),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              children: [...providers[movieID]!['buy']!.map((provider) => _WatchProviderIcon(provider: provider))],
+            ),
+          ),
+        ],
+        if (providers[movieID]!['rent']!.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 5, bottom: 2),
+            child: Text('Alquilar', style: textStyle.titleLarge),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              children: [...providers[movieID]!['rent']!.map((provider) => _WatchProviderIcon(provider: provider))],
+            ),
+          ),
+        ],
       ],
     );
+  }
+}
+
+class _WatchProviderIcon extends StatelessWidget {
+  final WatchProvider provider;
+
+  const _WatchProviderIcon({required this.provider});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 40,
+        width: 40,
+        margin: const EdgeInsets.only(right: 10),
+        child: GestureDetector(
+          onTap: () => showProviderNameToast(context, provider.providerName),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(provider.logoPath, height: 40, fit: BoxFit.contain),
+          ),
+        ));
   }
 }

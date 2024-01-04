@@ -17,7 +17,7 @@ abstract class TVRepository {
 
   Future<List<Movie>> searchTV(String query);
 
-  Future<Map<String, List<WatchProvider>>> getTvWatchProviderById(String tvId);
+  Future<Map<String, Map<String, List<WatchProvider>>>> getTvWatchProviderById(String tvId);
 
   Future<List<Episode>> getSeasonById(String tvId, int seasonNumber);
 
