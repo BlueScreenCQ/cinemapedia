@@ -45,6 +45,14 @@ final appRouter = GoRouter(initialLocation: '/home/0', routes: [
 
               return ActorScreen(actorId: actorID);
             }),
+        GoRoute(
+            path: 'collection/:id', // quitamos el primer slash / porque es la ruta del padre
+            name: CollectionScreen.name,
+            builder: (context, state) {
+              final collectionId = state.pathParameters['id'] ?? 'no-id';
+
+              return CollectionScreen(collectionId: collectionId);
+            }),
       ]),
   GoRoute(
     path: '/',

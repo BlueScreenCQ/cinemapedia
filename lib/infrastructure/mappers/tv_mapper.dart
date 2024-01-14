@@ -7,7 +7,9 @@ import 'package:cinemapedia/infrastructure/models/moviedb/tv_details_moviedb.dar
 class TVMapper {
   static TV tvfromMovieDBToEntity(TvResponse movieDB) => TV(
         adult: movieDB.adult,
-        backdropPath: (movieDB.backdropPath != '') ? 'https://image.tmdb.org/t/p/w500${movieDB.backdropPath}' : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+        backdropPath: (movieDB.backdropPath != '')
+            ? 'https://image.tmdb.org/t/p/w500${movieDB.backdropPath}'
+            : 'https://st2.depositphotos.com/1000434/10200/i/450/depositphotos_102007848-stock-photo-grunge-background-with-filmstrip.jpg',
         createdBy: movieDB.createdBy
             .map((e) => Crew(
                 id: e.id,
@@ -27,7 +29,9 @@ class TVMapper {
         originalName: movieDB.originalName,
         overview: movieDB.overview,
         popularity: movieDB.popularity,
-        posterPath: (movieDB.posterPath != '') ? 'https://image.tmdb.org/t/p/w500${movieDB.posterPath}' : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+        posterPath: (movieDB.posterPath != '')
+            ? 'https://image.tmdb.org/t/p/w500${movieDB.posterPath}'
+            : 'https://st2.depositphotos.com/1000434/10200/i/450/depositphotos_102007848-stock-photo-grunge-background-with-filmstrip.jpg',
         status: movieDB.status,
         seasons: movieDB.seasons
             .map((season) => entity_season.Season(
@@ -36,7 +40,11 @@ class TVMapper {
                 id: season.id,
                 name: season.name,
                 overview: season.overview,
-                posterPath: (season.posterPath != '') ? 'https://image.tmdb.org/t/p/w500${season.posterPath}' : 'https://image.tmdb.org/t/p/w500${movieDB.posterPath}',
+                posterPath: (season.posterPath != '')
+                    ? 'https://image.tmdb.org/t/p/w500${season.posterPath}'
+                    : ((movieDB.posterPath != '')
+                        ? 'https://image.tmdb.org/t/p/w500${movieDB.posterPath}'
+                        : 'https://st2.depositphotos.com/1000434/10200/i/450/depositphotos_102007848-stock-photo-grunge-background-with-filmstrip.jpg'),
                 seasonNumber: season.seasonNumber,
                 voteAverage: season.voteAverage,
                 episodes: []))

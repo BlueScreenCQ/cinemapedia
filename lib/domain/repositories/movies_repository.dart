@@ -1,4 +1,5 @@
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/movie_collection.dart';
 import 'package:cinemapedia/domain/entities/video.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 
@@ -20,4 +21,6 @@ abstract class MovieRepository {
   Future<List<Video>> getYoutubeVideosById(int movieId);
 
   Future<Map<String, Map<String, List<WatchProvider>>>> getWatchProviderById(String movieId);
+
+  Future<MovieCollection> getMovieCollectionById(String collectionId);
 }

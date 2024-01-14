@@ -1,5 +1,6 @@
 import 'package:cinemapedia/domain/entities/search_item.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
+import 'package:cinemapedia/domain/entities/movie_collection.dart';
 import 'package:isar/isar.dart';
 
 part 'movie.g.dart';
@@ -10,7 +11,7 @@ class Movie extends SearchItem {
 
   final bool adult;
   final String backdropPath;
-  // final MovieCollection? belongsToCollection;
+  final MovieCollection? belongsToCollection;
   final int? budget;
   final List<String> genreIds;
   final int id;
@@ -43,7 +44,7 @@ class Movie extends SearchItem {
   Movie(
       {required this.adult,
       required this.backdropPath,
-      // this.belongsToCollection,
+      this.belongsToCollection,
       this.budget,
       required this.genreIds,
       required this.id,

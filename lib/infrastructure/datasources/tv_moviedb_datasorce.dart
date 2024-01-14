@@ -92,11 +92,13 @@ class TVMoviedbDatasource extends TVDatasource {
   Future<Map<String, Map<String, List<WatchProvider>>>> getTvWatchProviderById(String tvId) async {
     final response = await dio.get('/tv/$tvId/watch/providers');
 
-    final moviedbProvidersReponse = WatchProvidersResponse.fromJson(response.data['results']['ES']);
-
     Map<String, Map<String, List<WatchProvider>>> watchProviders = {};
 
-    watchProviders[tvId] = WatchProviderMapper.watchProviderToEntity(moviedbProvidersReponse);
+    if (response.data['results']['ES'] != null) {
+      final moviedbProvidersReponse = WatchProvidersResponse.fromJson(response.data['results']['ES']);
+
+      watchProviders[tvId] = WatchProviderMapper.watchProviderToEntity(moviedbProvidersReponse);
+    }
 
     return watchProviders;
   }

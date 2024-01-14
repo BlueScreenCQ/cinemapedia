@@ -70,7 +70,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
 
     return SliverAppBar(
       backgroundColor: Colors.black,
-      expandedHeight: size.height * 0.6,
+      expandedHeight: size.height * 0.25,
       foregroundColor: Colors.white,
       actions: [
         IconButton(
@@ -107,7 +107,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
           children: [
             SizedBox.expand(
               child: Image.network(
-                tv.posterPath,
+                tv.backdropPath,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress != null) return const SizedBox();

@@ -4,7 +4,9 @@ import 'package:cinemapedia/infrastructure/models/moviedb/combined_credits_respo
 class CombinedCreditMapper {
   static Movie moviedbCastCreditToEntity(Cast cast) => Movie(
       adult: cast.adult,
-      backdropPath: (cast.backdropPath != '') ? 'https://image.tmdb.org/t/p/w500${cast.backdropPath}' : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+      backdropPath: (cast.backdropPath != '')
+          ? 'https://image.tmdb.org/t/p/w500${cast.backdropPath}'
+          : 'https://st2.depositphotos.com/1000434/10200/i/450/depositphotos_102007848-stock-photo-grunge-background-with-filmstrip.jpg',
       genreIds: cast.genreIds.map((e) => e.toString()).toList(),
       id: cast.id,
       originalLanguage: cast.originalLanguage,
@@ -27,7 +29,9 @@ class CombinedCreditMapper {
 
   static Movie moviedbCrewCreditToEntity(Cast crew) => Movie(
       adult: crew.adult,
-      backdropPath: (crew.backdropPath != '') ? 'https://image.tmdb.org/t/p/w500${crew.backdropPath}' : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+      backdropPath: (crew.backdropPath != '')
+          ? 'https://image.tmdb.org/t/p/w500${crew.backdropPath}'
+          : 'https://st2.depositphotos.com/1000434/10200/i/450/depositphotos_102007848-stock-photo-grunge-background-with-filmstrip.jpg',
       genreIds: crew.genreIds.map((e) => e.toString()).toList(),
       id: crew.id,
       originalLanguage: crew.originalLanguage,

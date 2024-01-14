@@ -1,7 +1,10 @@
+import 'package:cinemapedia/infrastructure/models/moviedb/movie_moviedb.dart';
+import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_response.dart';
+
 class MovieDetails {
   final bool adult;
   final String backdropPath;
-  final Collection? belongsToCollection;
+  final MovieDBCollection? belongsToCollection;
   final int budget;
   final List<Genre> genres;
   final String homepage;
@@ -56,7 +59,7 @@ class MovieDetails {
   factory MovieDetails.fromJson(Map<String, dynamic> json) => MovieDetails(
         adult: json["adult"],
         backdropPath: json["backdrop_path"] ?? '',
-        belongsToCollection: json["belongs_to_collection"] == null ? null : Collection.fromJson(json["belongs_to_collection"]),
+        belongsToCollection: json["belongs_to_collection"] == null ? null : MovieDBCollection.fromJson(json["belongs_to_collection"]),
         budget: json["budget"],
         genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
         homepage: json["homepage"],
@@ -110,24 +113,23 @@ class MovieDetails {
       };
 }
 
-class Collection {
-  Collection({
-    required this.id,
-    required this.name,
-    required this.posterPath,
-    required this.backdropPath,
-  });
+class MovieDBCollection {
+  MovieDBCollection({required this.id, required this.name, required this.posterPath, required this.backdropPath, this.overview, this.parts});
 
   final int id;
   final String name;
   final String? posterPath;
   final String? backdropPath;
+  final String? overview;
+  List<MovieMovieDB>? parts;
 
-  factory Collection.fromJson(Map<String, dynamic> json) => Collection(
+  factory MovieDBCollection.fromJson(Map<String, dynamic> json) => MovieDBCollection(
         id: json["id"],
         name: json["name"],
         posterPath: json["poster_path"] ?? '',
         backdropPath: json["backdrop_path"] ?? '',
+        overview: (json['overview'] != null) ? json['overview'] : '',
+        parts: (json['parts'] != null && json['parts'] != []) ? List<MovieMovieDB>.from(json["parts"].map((x) => MovieMovieDB.fromJson(x))) : [], //(json['parts'] != null) ? json['parts'] : []
       );
 
   Map<String, dynamic> toJson() => {

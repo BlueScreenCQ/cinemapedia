@@ -1,5 +1,7 @@
+import 'package:cinemapedia/domain/entities/movie_collection.dart';
 import 'package:cinemapedia/domain/entities/video.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
+import 'package:cinemapedia/infrastructure/mappers/movie_collection_mapper.dart';
 import 'package:cinemapedia/infrastructure/mappers/movie_mapper.dart';
 import 'package:cinemapedia/infrastructure/mappers/video_mapper.dart';
 import 'package:cinemapedia/infrastructure/mappers/watch_provider_mapper.dart';
@@ -127,5 +129,19 @@ class MoviedbDatasource extends MovieDatasource {
     watchProviders[movieId] = WatchProviderMapper.watchProviderToEntity(moviedbProvidersReponse);
 
     return watchProviders;
+  }
+
+  @override
+  Future<MovieCollection> getMovieCollectionById(String collectionId) async {
+    final response = await dio.get('/collection/$collectionId');
+
+    if (response.statusCode != 200) {
+      throw Exception('Collection with id $collectionId not found');
+    }
+
+    final collectionDetails = MovieDBCollection.fromJson(response.data);
+
+    final collection = MovieCollectionMapper.movieCollectionToEntity(collectionDetails);
+    return collection;
   }
 }

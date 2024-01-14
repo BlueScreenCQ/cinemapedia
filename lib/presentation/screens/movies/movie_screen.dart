@@ -1,3 +1,4 @@
+import 'package:cinemapedia/domain/entities/movie_collection.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:cinemapedia/presentation/widgets/movies/similar_movies.dart';
 import 'package:cinemapedia/presentation/widgets/shared/actors_by_show.dart';
@@ -13,6 +14,8 @@ import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:animate_do/animate_do.dart';
 
 import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:go_router/go_router.dart';
+import 'package:isar/isar.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';
@@ -68,7 +71,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
 
     return SliverAppBar(
       backgroundColor: Colors.black,
-      expandedHeight: size.height * 0.6,
+      expandedHeight: size.height * 0.25,
       foregroundColor: Colors.white,
       actions: [
         IconButton(
@@ -104,7 +107,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
           children: [
             SizedBox.expand(
               child: Image.network(
-                movie.posterPath,
+                movie.backdropPath,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress != null) return const SizedBox();
@@ -291,6 +294,10 @@ class _MovieDetails extends StatelessWidget {
                           ),
                         ],
                       )),
+
+                //COLECCION
+                if (movie.belongsToCollection != null) _CollectionByMovie(collection: movie.belongsToCollection!),
+                //COLECCION
               ],
             ),
             const SizedBox(width: 10),
@@ -315,6 +322,7 @@ class _MovieDetails extends StatelessWidget {
           ]),
         ),
 
+        //GÉNEROS
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Wrap(
@@ -448,5 +456,86 @@ class _WatchProviderIcon extends StatelessWidget {
             child: Image.network(provider.logoPath, height: 40, fit: BoxFit.contain),
           ),
         ));
+  }
+}
+
+// class _CollectionByMovie extends StatelessWidget {
+//   final MovieCollection collection;
+
+//   const _CollectionByMovie({required this.collection});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final textTheme = Theme.of(context).textTheme;
+
+//     return SizedBox(
+//       width: 120,
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         mainAxisAlignment: MainAxisAlignment.start,
+//         children: [
+//           const SizedBox(height: 5),
+//           ClipRRect(
+//             borderRadius: BorderRadius.circular(5),
+//             child: Image.network(
+//               collection.backdropPath!,
+//               fit: BoxFit.cover,
+//               width: double.infinity,
+//               // height: 65,
+//               loadingBuilder: (context, child, loadingProgress) {
+//                 if (loadingProgress != null) {
+//                   return const DecoratedBox(
+//                     decoration: BoxDecoration(color: Colors.black12),
+//                   );
+//                 }
+//                 return GestureDetector(onTap: () => context.push('/home/0/collection/${collection.id}'), child: FadeIn(child: child));
+//               },
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.only(top: 5),
+//             child: Text(collection.name, style: textTheme.titleSmall, textAlign: TextAlign.start, maxLines: 2),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+class _CollectionByMovie extends StatelessWidget {
+  final MovieCollection collection;
+
+  const _CollectionByMovie({required this.collection});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
+
+    return SizedBox(
+      width: 120,
+      child: GestureDetector(
+        onTap: () => context.push('/home/0/collection/${collection.id}'),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 2.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Icon(
+                Icons.video_collection_outlined,
+                size: 20,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                'Ver colección',
+                style: textTheme.titleMedium!.copyWith(color: colors.primary),
+                maxLines: 2,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
