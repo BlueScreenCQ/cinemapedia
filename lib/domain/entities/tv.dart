@@ -6,7 +6,7 @@ class TV {
   final bool adult;
   final String backdropPath;
   final List<Crew> createdBy;
-  // final List<int> episodeRunTime; //TODO MIRAR
+  // final List<int> episodeRunTime;
   final List<String> genreIds;
   final int id;
   final bool inProduction;

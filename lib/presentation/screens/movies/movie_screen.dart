@@ -15,7 +15,6 @@ import 'package:animate_do/animate_do.dart';
 
 import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:go_router/go_router.dart';
-import 'package:isar/isar.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';

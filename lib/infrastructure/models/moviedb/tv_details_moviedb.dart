@@ -4,7 +4,7 @@ class TvResponse {
   final bool adult;
   final String backdropPath;
   final List<Cast> createdBy;
-  final List<int> episodeRunTime; //TODO MIRAR
+  final List<int> episodeRunTime;
   final DateTime? firstAirDate;
   final DateTime? lastAirDate;
   final List<Genre> genres;

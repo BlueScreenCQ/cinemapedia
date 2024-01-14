@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:cinemapedia/domain/entities/search_item.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 typedef SearchCallback = Future<List<SearchItem>> Function(String query);
 

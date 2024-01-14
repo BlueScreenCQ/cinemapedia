@@ -227,7 +227,7 @@ class _EpisodeDetails extends StatelessWidget {
 
           const SizedBox(height: 8.0),
 
-          if (episode.episodeType == "finale") _episodeType(type: episode.episodeType),
+          if (episode.episodeType == "finale") _EpisodeType(type: episode.episodeType),
 
           const SizedBox(height: 8.0),
 
@@ -443,10 +443,10 @@ class _Crew extends StatelessWidget {
   }
 }
 
-class _episodeType extends StatelessWidget {
+class _EpisodeType extends StatelessWidget {
   final String type;
 
-  const _episodeType({required this.type});
+  const _EpisodeType({required this.type});
 
   @override
   Widget build(BuildContext context) {

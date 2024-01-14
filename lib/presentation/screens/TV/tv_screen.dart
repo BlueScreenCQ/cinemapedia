@@ -263,7 +263,7 @@ class _TVDetails extends StatelessWidget {
                   ),
                 ),
 
-                if (tv.status != null && tv.status != "") _tvStatus(status: tv.status),
+                if (tv.status != null && tv.status != "") _TvStatus(status: tv.status),
 
                 SizedBox(
                   width: 120,
@@ -484,10 +484,10 @@ class _Seasons extends StatelessWidget {
   }
 }
 
-class _tvStatus extends StatelessWidget {
+class _TvStatus extends StatelessWidget {
   final String status;
 
-  const _tvStatus({required this.status});
+  const _TvStatus({required this.status});
 
   @override
   Widget build(BuildContext context) {

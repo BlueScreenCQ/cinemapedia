@@ -1,5 +1,4 @@
 import 'package:cinemapedia/infrastructure/models/moviedb/movie_moviedb.dart';
-import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_response.dart';
 
 class MovieDetails {
   final bool adult;

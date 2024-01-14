@@ -2,8 +2,6 @@ import 'package:cinemapedia/presentation/views/views.dart';
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-//TODO HACER COMPORTAMIENTO KEEP ALIVE
-
 class HomeScreen extends StatefulWidget {
   static const name = 'home-screen';
   final int pageIndex;
@@ -30,11 +28,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     super.dispose();
   }
 
-  final viewRoutes = const <Widget>[
-    HomeView(),
-    SeriesView(), //TODO CAMBIAR POR SERIES
-    FavoritesView()
-  ];
+  final viewRoutes = const <Widget>[HomeView(), SeriesView(), FavoritesView()];
 
   @override
   Widget build(BuildContext context) {
