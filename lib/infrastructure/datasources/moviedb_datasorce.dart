@@ -36,6 +36,13 @@ class MoviedbDatasource extends MovieDatasource {
     return cleanUpcoming;
   }
 
+  List<Movie> orderMovies(List<Movie> movies) {
+    movies.sort((a, b) => b.releaseDate!.compareTo(a.releaseDate!));
+    // movies.reversed.toList();
+
+    return movies;
+  }
+
   @override
   Future<List<Movie>> getNowPlaying({int page = 1}) async {
     final response = await dio.get('/movie/now_playing', queryParameters: {'page': page});
@@ -92,8 +99,13 @@ class MoviedbDatasource extends MovieDatasource {
 
   @override
   Future<List<Movie>> getSimilarMovies(int movieId) async {
-    final response = await dio.get('/movie/$movieId/similar');
-    return _jsonToMovies(response.data);
+    final response = await dio.get('/movie/$movieId/recommendations');
+
+    List<Movie> movies = _jsonToMovies(response.data);
+
+    orderMovies(movies);
+
+    return movies;
   }
 
   @override
