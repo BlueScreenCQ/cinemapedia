@@ -21,7 +21,7 @@ class ProductionCompaniesByShow extends StatelessWidget {
           alignment: WrapAlignment.spaceBetween,
           children: [
             ...companies.map((provider) {
-              if (provider.logoPath == 'no-logo') return const SizedBox();
+              // if (provider.logoPath == 'no-logo') return const SizedBox();
 
               return Container(
                   height: 40,
@@ -31,11 +31,16 @@ class ProductionCompaniesByShow extends StatelessWidget {
                     onTap: () => showProviderNameToast(context, provider.providerName),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        provider.logoPath,
-                        height: 40,
-                        fit: BoxFit.contain,
-                      ),
+                      child: (provider.logoPath == 'no-logo')
+                          ? const Icon(
+                              Icons.corporate_fare_outlined,
+                              size: 40,
+                            )
+                          : Image.network(
+                              provider.logoPath,
+                              height: 40,
+                              fit: BoxFit.contain,
+                            ),
                     ),
                   ));
             })
