@@ -113,80 +113,96 @@ class _SeasonExpansionPanelListState extends State<SeasonExpansionPanelList> {
                   )),
             );
           },
-          body: (season.episodes.isNotEmpty)
-              ? SizedBox(
-                  height: 220,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: season.episodes.length,
-                      itemBuilder: (context, index) {
-                        final Episode item = season.episodes[index];
-
-                        return GestureDetector(
-                          onTap: () => context.push('/home/0/tv/${widget.tvID}/${season.seasonNumber}/${item.episodeNumber}'),
-                          child: Container(
-                              padding: const EdgeInsets.all(8.0),
-                              width: 220,
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                //Caputra del capítulo
-                                ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: (item.stillPath != 'no-poster')
-                                        ? Image.network(
-                                            item.stillPath,
-                                            width: 220,
-                                            height: 124,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : SizedBox(
-                                            width: 220,
-                                            height: 124,
-                                            child: DecoratedBox(
-                                              decoration: BoxDecoration(
-                                                color: colors.secondaryContainer,
-                                              ),
-                                              child: const Center(
-                                                child: Icon(
-                                                  Icons.live_tv_outlined,
-                                                  size: 60,
-                                                ),
-                                              ),
-                                            ),
-                                          )),
-
-                                const SizedBox(height: 5),
-
-                                //Name
-                                Text(
-                                  '${item.episodeNumber}-${item.name}',
-                                  maxLines: 2,
-                                  style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                                ),
-
-                                Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                                  if (item.airDate != null) ...[
-                                    const Icon(Icons.calendar_month_outlined, size: 20),
-                                    const SizedBox(width: 2),
-                                    Text('${item.airDate!.day.toString().padLeft(2, '0')}/${season.airDate!.month.toString().padLeft(2, '0')}/${season.airDate!.year.toString().padLeft(4, '0')}',
-                                        style: textStyle.bodySmall),
-                                    const SizedBox(width: 15.0),
-                                  ],
-
-                                  //* Rating
-                                  if (item.voteCount > 0) ...[
-                                    Icon(Icons.star_half_rounded, color: Colors.yellow.shade800, size: 20),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      HumanFormats.number(item.voteAverage, 2),
-                                      style: textStyle.bodySmall!.copyWith(color: Colors.yellow.shade800),
-                                    )
-                                  ],
-                                ]),
-                              ])),
-                        );
-                      }),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (season.overview != null && season.overview != "") ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    season.overview,
+                    style: textStyle.bodyMedium,
+                    textAlign: TextAlign.justify,
+                  ),
                 )
-              : Container(),
+              ],
+              (season.episodes.isNotEmpty)
+                  ? SizedBox(
+                      height: 220,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: season.episodes.length,
+                          itemBuilder: (context, index) {
+                            final Episode item = season.episodes[index];
+
+                            return GestureDetector(
+                              onTap: () => context.push('/home/0/tv/${widget.tvID}/${season.seasonNumber}/${item.episodeNumber}'),
+                              child: Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  width: 220,
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                    //Caputra del capítulo
+                                    ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: (item.stillPath != 'no-poster')
+                                            ? Image.network(
+                                                item.stillPath,
+                                                width: 220,
+                                                height: 124,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : SizedBox(
+                                                width: 220,
+                                                height: 124,
+                                                child: DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                    color: colors.secondaryContainer,
+                                                  ),
+                                                  child: const Center(
+                                                    child: Icon(
+                                                      Icons.live_tv_outlined,
+                                                      size: 60,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )),
+
+                                    const SizedBox(height: 5),
+
+                                    //Name
+                                    Text(
+                                      '${item.episodeNumber}-${item.name}',
+                                      maxLines: 2,
+                                      style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                                    ),
+
+                                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                                      if (item.airDate != null) ...[
+                                        const Icon(Icons.calendar_month_outlined, size: 20),
+                                        const SizedBox(width: 2),
+                                        Text('${item.airDate!.day.toString().padLeft(2, '0')}/${season.airDate!.month.toString().padLeft(2, '0')}/${season.airDate!.year.toString().padLeft(4, '0')}',
+                                            style: textStyle.bodySmall),
+                                        const SizedBox(width: 15.0),
+                                      ],
+
+                                      //* Rating
+                                      if (item.voteCount > 0) ...[
+                                        Icon(Icons.star_half_rounded, color: Colors.yellow.shade800, size: 20),
+                                        const SizedBox(width: 2),
+                                        Text(
+                                          HumanFormats.number(item.voteAverage, 2),
+                                          style: textStyle.bodySmall!.copyWith(color: Colors.yellow.shade800),
+                                        )
+                                      ],
+                                    ]),
+                                  ])),
+                            );
+                          }),
+                    )
+                  : Container(),
+            ],
+          ),
           isExpanded: item.isExpanded,
         );
       }).toList(),
