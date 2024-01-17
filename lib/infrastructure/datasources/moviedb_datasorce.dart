@@ -37,7 +37,13 @@ class MoviedbDatasource extends MovieDatasource {
   }
 
   List<Movie> orderMovies(List<Movie> movies) {
-    movies.sort((a, b) => b.releaseDate!.compareTo(a.releaseDate!));
+    movies.sort((a, b) {
+      if (a.releaseDate != null && b.releaseDate != null) {
+        return b.releaseDate!.compareTo(a.releaseDate!);
+      }
+
+      return 0;
+    });
     // movies.reversed.toList();
 
     return movies;

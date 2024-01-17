@@ -176,21 +176,22 @@ class _TVDetails extends StatelessWidget {
                 const SizedBox(height: 5.0),
 
                 // Rating
-                SizedBox(
-                  width: 120,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
-                      const SizedBox(width: 2),
-                      Text(tv.voteAverage.toStringAsPrecision(2), style: textStyle.titleSmall?.copyWith(color: Colors.yellow.shade800)),
-                      // const Spacer(),
-                      const SizedBox(width: 15.0),
-                      Text(HumanFormats.intNumber(tv.voteCount), style: textStyle.titleSmall),
-                    ],
+                if (tv.voteAverage != 0)
+                  SizedBox(
+                    width: 120,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
+                        const SizedBox(width: 2),
+                        Text(tv.voteAverage.toStringAsPrecision(2), style: textStyle.titleSmall?.copyWith(color: Colors.yellow.shade800)),
+                        // const Spacer(),
+                        const SizedBox(width: 15.0),
+                        Text(HumanFormats.intNumber(tv.voteCount), style: textStyle.titleSmall),
+                      ],
+                    ),
                   ),
-                ),
 
                 //Fecha de estreno
                 if (tv.firstAirDate != null)
@@ -297,7 +298,8 @@ class _TVDetails extends StatelessWidget {
                   // Text(movie.overview),
                   CustomReadMoreText(
                     text: tv.overview,
-                    trimLines: 8,
+                    trimLines: 12,
+                    textStyle: textStyle.bodyLarge,
                   ),
                 ],
               ),

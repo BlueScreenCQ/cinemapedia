@@ -171,21 +171,22 @@ class _MovieDetails extends StatelessWidget {
                 if (movie.adult) Icon(Icons.explicit_outlined, color: Colors.red.shade800, size: 25),
 
                 // Rating
-                SizedBox(
-                  width: 120,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
-                      const SizedBox(width: 2),
-                      Text(movie.voteAverage.toStringAsPrecision(2), style: textStyle.titleSmall?.copyWith(color: Colors.yellow.shade800)),
-                      // const Spacer(),
-                      const SizedBox(width: 15.0),
-                      Text(HumanFormats.intNumber(movie.voteCount), style: textStyle.titleSmall),
-                    ],
+                if (movie.voteAverage != 0)
+                  SizedBox(
+                    width: 120,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.star_half_outlined, color: Colors.yellow.shade800, size: 25),
+                        const SizedBox(width: 2),
+                        Text(movie.voteAverage.toStringAsPrecision(2), style: textStyle.titleSmall?.copyWith(color: Colors.yellow.shade800)),
+                        // const Spacer(),
+                        const SizedBox(width: 15.0),
+                        Text(HumanFormats.intNumber(movie.voteCount), style: textStyle.titleSmall),
+                      ],
+                    ),
                   ),
-                ),
 
                 //Fecha de estreno
                 if (movie.releaseDate != null)
@@ -211,31 +212,32 @@ class _MovieDetails extends StatelessWidget {
                     ),
                   ),
 
-                SizedBox(
-                  width: 120,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.language_outlined,
-                        color: Colors.blueAccent,
-                        size: 20,
-                      ),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                      Text(
-                        movie.originalLanguage.toUpperCase(),
-                        style: textStyle.titleSmall,
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
+                if (movie.originalLanguage != "")
+                  SizedBox(
+                    width: 120,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.language_outlined,
+                          color: Colors.blueAccent,
+                          size: 20,
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        Text(
+                          movie.originalLanguage.toUpperCase(),
+                          style: textStyle.titleSmall,
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
                 // Duración
-                if (movie.runtime != null)
+                if (movie.runtime != null && movie.runtime != 0)
                   SizedBox(
                       width: 120,
                       child: Row(
@@ -312,7 +314,7 @@ class _MovieDetails extends StatelessWidget {
                   // Text(movie.overview),
                   CustomReadMoreText(
                     text: movie.overview,
-                    trimLines: 8,
+                    trimLines: 12,
                     textStyle: textStyle.bodyLarge,
                   ),
                 ],
