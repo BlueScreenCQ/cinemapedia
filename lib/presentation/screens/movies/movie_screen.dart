@@ -202,12 +202,14 @@ class _MovieDetails extends StatelessWidget {
                           size: 20,
                         ),
                         const SizedBox(width: 5),
-                        Text(
-                          '${movie.releaseDate!.day.toString().padLeft(2, '0')}/${movie.releaseDate!.month.toString().padLeft(2, '0')}/${movie.releaseDate!.year.toString().padLeft(4, '0')}',
-                          style: textStyle.titleSmall,
-                          maxLines: 2,
-                          // textAlign: TextAlign.center,
-                        ),
+                        (movie.releaseDate != DateTime(1970, 1, 1))
+                            ? Text(
+                                '${movie.releaseDate!.day.toString().padLeft(2, '0')}/${movie.releaseDate!.month.toString().padLeft(2, '0')}/${movie.releaseDate!.year.toString().padLeft(4, '0')}',
+                                style: textStyle.titleSmall,
+                                maxLines: 2,
+                                // textAlign: TextAlign.center,
+                              )
+                            : Text('No confirmada', style: textStyle.titleSmall)
                       ],
                     ),
                   ),

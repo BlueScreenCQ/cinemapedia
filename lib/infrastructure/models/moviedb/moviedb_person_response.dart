@@ -12,12 +12,12 @@ class Person {
   final bool adult;
   final List<String> alsoKnownAs;
   final String biography;
-  final DateTime birthday;
+  final DateTime? birthday;
   final DateTime? deathday;
   final int gender;
   final dynamic homepage;
   final int id;
-  final String imdbId;
+  final String? imdbId;
   final String knownForDepartment;
   final String name;
   final String? placeOfBirth;
@@ -45,12 +45,12 @@ class Person {
         adult: json["adult"],
         alsoKnownAs: List<String>.from(json["also_known_as"].map((x) => x)),
         biography: json["biography"],
-        birthday: DateTime.parse(json["birthday"]),
+        birthday: json["birthday"] != null ? DateTime.parse(json["birthday"]) : null,
         deathday: json["deathday"] != null ? DateTime.parse(json["deathday"]) : null,
         gender: json["gender"],
         homepage: json["homepage"],
         id: json["id"],
-        imdbId: json["imdb_id"],
+        imdbId: json["imdb_id"] != null ? json['imdb_id'] : null,
         knownForDepartment: json["known_for_department"],
         name: json["name"],
         placeOfBirth: json["place_of_birth"],
@@ -62,7 +62,7 @@ class Person {
         "adult": adult,
         "also_known_as": List<dynamic>.from(alsoKnownAs.map((x) => x)),
         "biography": biography,
-        "birthday": "${birthday.year.toString().padLeft(4, '0')}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}",
+        "birthday": "${birthday?.year.toString().padLeft(4, '0')}-${birthday?.month.toString().padLeft(2, '0')}-${birthday?.day.toString().padLeft(2, '0')}",
         "deathday": "${deathday?.year.toString().padLeft(4, '0')}-${deathday?.month.toString().padLeft(2, '0')}-${deathday?.day.toString().padLeft(2, '0')}",
         "gender": gender,
         "homepage": homepage,

@@ -207,7 +207,7 @@ class ProductionCompany {
 
   factory ProductionCompany.fromJson(Map<String, dynamic> json) => ProductionCompany(
         id: json["id"],
-        logoPath: json["logo_path"] ?? '', //TODO PONER FOTO DE PEGA
+        logoPath: json["logo_path"] ?? '',
         name: json["name"],
         originCountry: json["origin_country"],
       );

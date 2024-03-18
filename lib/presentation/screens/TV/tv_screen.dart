@@ -509,6 +509,9 @@ class _TvStatus extends StatelessWidget {
       case 'In Production':
         text = 'En producción';
         break;
+      case 'Planned':
+        text = 'Serie programada';
+        break;
       default:
         text = status;
         break;

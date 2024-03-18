@@ -38,7 +38,7 @@ class CollectionMapNotifier extends StateNotifier<Map<String, MovieCollection>> 
 }
 
 List<Movie> orderMovies(List<Movie> movies) {
-  movies.sort((a, b) => a.releaseDate!.compareTo(b.releaseDate!));
+  movies.sort((a, b) => (a.releaseDate ?? DateTime(2070, 1, 1)).compareTo((b.releaseDate ?? DateTime(2070, 1, 1))));
   // movies = movies.reversed.toList();
 
   return movies;

@@ -71,7 +71,7 @@ class MovieDetails {
         posterPath: json["poster_path"] ?? '',
         productionCompanies: List<ProductionCompany>.from(json["production_companies"].map((x) => ProductionCompany.fromJson(x))),
         productionCountries: List<ProductionCountry>.from(json["production_countries"].map((x) => ProductionCountry.fromJson(x))),
-        releaseDate: DateTime.parse(json["release_date"]),
+        releaseDate: (json["release_date"] != null && json["release_date"] != "") ? DateTime.parse(json["release_date"]) : DateTime(1970, 1, 1),
         revenue: json["revenue"],
         runtime: json["runtime"],
         spokenLanguages: List<SpokenLanguage>.from(json["spoken_languages"].map((x) => SpokenLanguage.fromJson(x))),

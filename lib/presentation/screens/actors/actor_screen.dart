@@ -83,22 +83,23 @@ class _ActorDetails extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8.0),
-                SizedBox(
-                  width: 120,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Icon(Icons.cake_outlined, size: 20),
-                      const SizedBox(width: 5),
-                      Text(
-                        '${actor.birthday!.day.toString().padLeft(2, '0')}/${actor.birthday!.month.toString().padLeft(2, '0')}/${actor.birthday!.year.toString().padLeft(4, '0')}',
-                        style: textStyle.titleSmall,
-                        // textAlign: TextAlign.center,
-                      ),
-                    ],
+                if (actor.birthday != null)
+                  SizedBox(
+                    width: 120,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.cake_outlined, size: 20),
+                        const SizedBox(width: 5),
+                        Text(
+                          '${actor.birthday!.day.toString().padLeft(2, '0')}/${actor.birthday!.month.toString().padLeft(2, '0')}/${actor.birthday!.year.toString().padLeft(4, '0')}',
+                          style: textStyle.titleSmall,
+                          // textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 if (actor.deatday != null)
                   SizedBox(
                     width: 120,
