@@ -11,6 +11,7 @@ class Movie extends SearchItem {
 
   final bool adult;
   final String backdropPath;
+  @ignore
   final MovieCollection? belongsToCollection;
   final int? budget;
   final List<String> genreIds;
@@ -26,6 +27,7 @@ class Movie extends SearchItem {
   final int? runtime;
   final String? status;
   final String title;
+  @ignore
   final List<WatchProvider>? productionCompanies;
   final String? tagline;
   final bool video;
