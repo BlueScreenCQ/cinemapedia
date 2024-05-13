@@ -1,21 +1,21 @@
 class MovieMovieDB {
-  MovieMovieDB({
-    required this.adult,
-    required this.backdropPath,
-    required this.genreIds,
-    required this.id,
-    required this.originalLanguage,
-    required this.originalTitle,
-    required this.overview,
-    required this.popularity,
-    required this.posterPath,
-    required this.releaseDate,
-    required this.title,
-    required this.name,
-    required this.video,
-    required this.voteAverage,
-    required this.voteCount,
-  });
+  MovieMovieDB(
+      {required this.adult,
+      required this.backdropPath,
+      required this.genreIds,
+      required this.id,
+      required this.originalLanguage,
+      required this.originalTitle,
+      required this.overview,
+      required this.popularity,
+      required this.posterPath,
+      required this.releaseDate,
+      required this.title,
+      required this.name,
+      required this.video,
+      required this.voteAverage,
+      required this.voteCount,
+      required this.firstAirDate});
 
   final bool adult;
   final String backdropPath;
@@ -32,6 +32,7 @@ class MovieMovieDB {
   final bool video;
   final double voteAverage;
   final int voteCount;
+  final DateTime? firstAirDate;
 
   factory MovieMovieDB.fromJson(Map<String, dynamic> json) => MovieMovieDB(
         adult: json["adult"] ?? false,
@@ -49,6 +50,7 @@ class MovieMovieDB {
         video: json["video"] ?? false,
         voteAverage: json["vote_average"]?.toDouble(),
         voteCount: json["vote_count"],
+        firstAirDate: json['first_air_date'] != null && json["first_air_date"].toString().isNotEmpty ? DateTime.parse(json["first_air_date"]) : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -67,5 +69,6 @@ class MovieMovieDB {
         "video": video,
         "vote_average": voteAverage,
         "vote_count": voteCount,
+        "first_air_date": firstAirDate
       };
 }

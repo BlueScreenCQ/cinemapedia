@@ -19,7 +19,7 @@ class MovieMapper {
       posterPath: (movieDB.posterPath != '')
           ? 'https://image.tmdb.org/t/p/w500${movieDB.posterPath}'
           : 'https://w7.pngwing.com/pngs/584/468/png-transparent-graphic-film-movie-camera-camera-photography-logo-monochrome.png',
-      releaseDate: movieDB.releaseDate,
+      releaseDate: movieDB.releaseDate ?? movieDB.firstAirDate,
       title: movieDB.title,
       name: movieDB.name,
       video: movieDB.video,
