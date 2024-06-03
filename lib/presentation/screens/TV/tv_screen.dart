@@ -1,5 +1,6 @@
 import 'package:cinemapedia/presentation/providers/watch_providers/watch_provider_by_tv_provider.dart';
 import 'package:cinemapedia/presentation/widgets/shared/actors_by_show.dart';
+import 'package:cinemapedia/presentation/widgets/shared/ia_dialog.dart';
 import 'package:cinemapedia/presentation/widgets/shared/production_companies_by_show.dart';
 import 'package:cinemapedia/presentation/widgets/shared/snack_bar.dart';
 import 'package:cinemapedia/presentation/widgets/tv/season_expansion_panel_list.dart';
@@ -283,6 +284,10 @@ class _TVDetails extends StatelessWidget {
                     textAlign: TextAlign.start,
                   ),
                 ),
+
+                //RESUMEN CON GEMINI
+                AskGeminiAboutIt(topic: tv.name, type: ShowType.tv),
+                //RESUMEN CON GEMINI
               ],
             ),
             const SizedBox(width: 10),

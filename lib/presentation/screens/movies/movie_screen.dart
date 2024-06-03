@@ -4,6 +4,7 @@ import 'package:cinemapedia/presentation/widgets/movies/similar_movies.dart';
 import 'package:cinemapedia/presentation/widgets/shared/actors_by_show.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_gradient.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_read_more_text.dart';
+import 'package:cinemapedia/presentation/widgets/shared/ia_dialog.dart';
 import 'package:cinemapedia/presentation/widgets/shared/production_companies_by_show.dart';
 import 'package:cinemapedia/presentation/widgets/shared/snack_bar.dart';
 import 'package:cinemapedia/presentation/widgets/videos/videos_from_movie.dart';
@@ -12,9 +13,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:cinemapedia/presentation/providers/providers.dart';
-import 'package:go_router/go_router.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';
@@ -301,6 +302,10 @@ class _MovieDetails extends StatelessWidget {
                 //COLECCION
                 if (movie.belongsToCollection != null) _CollectionByMovie(collection: movie.belongsToCollection!),
                 //COLECCION
+
+                //RESUMEN CON GEMINI
+                AskGeminiAboutIt(topic: movie.title, type: ShowType.movie),
+                //RESUMEN CON GEMINI
               ],
             ),
             const SizedBox(width: 10),

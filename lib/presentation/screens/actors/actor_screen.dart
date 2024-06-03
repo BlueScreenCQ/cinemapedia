@@ -4,6 +4,7 @@ import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/actors/actor_info_provider.dart';
 import 'package:cinemapedia/presentation/providers/movies/combined_credits_provider.dart';
 import 'package:cinemapedia/presentation/widgets/shared/custom_read_more_text.dart';
+import 'package:cinemapedia/presentation/widgets/shared/ia_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -121,6 +122,10 @@ class _ActorDetails extends StatelessWidget {
                       ],
                     ),
                   ),
+
+                //RESUMEN CON GEMINI
+                AskGeminiAboutIt(topic: actor.name, type: ShowType.actor),
+                //RESUMEN CON GEMINI
               ],
             ),
             const SizedBox(width: 10),
