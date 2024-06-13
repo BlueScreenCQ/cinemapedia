@@ -1,3 +1,4 @@
+import 'package:cinemapedia/config/helpers/gemini_ia.dart';
 import 'package:cinemapedia/presentation/providers/watch_providers/watch_provider_by_tv_provider.dart';
 import 'package:cinemapedia/presentation/widgets/shared/actors_by_show.dart';
 import 'package:cinemapedia/presentation/widgets/shared/ia_dialog.dart';
@@ -286,7 +287,7 @@ class _TVDetails extends StatelessWidget {
                 ),
 
                 //RESUMEN CON GEMINI
-                AskGeminiAboutIt(topic: tv.name, type: ShowType.tv),
+                AskGeminiAboutIt(topic: tv.name, type: QuestionType.tv),
                 //RESUMEN CON GEMINI
               ],
             ),
@@ -345,7 +346,11 @@ class _TVDetails extends StatelessWidget {
         if (tv.createdBy.isNotEmpty) _CreatedBy(tv: tv),
 
         //Actores
-        ActorsByShow(showId: tv.id.toString(), isTV: true),
+        ActorsByShow(
+          showId: tv.id.toString(),
+          title: tv.name,
+          isTV: true,
+        ),
 
         _Seasons(tv: tv),
 

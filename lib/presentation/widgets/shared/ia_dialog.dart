@@ -1,12 +1,12 @@
+import 'package:cinemapedia/config/helpers/gemini_ia.dart';
 import 'package:flutter/material.dart';
-import 'package:cinemapedia/config/constants/envirovement.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 enum ShowType { movie, tv, actor }
 
 class AskGeminiAboutIt extends StatefulWidget {
   final String topic;
-  final ShowType type;
+  final QuestionType type;
 
   const AskGeminiAboutIt({super.key, required this.topic, required this.type});
 
@@ -51,7 +51,7 @@ class _AskGeminiAboutItState extends State<AskGeminiAboutIt> {
 
     showDialog(
       context: context,
-      // barrierDismissible: false, // Evitar que se pueda cerrar al tocar fuera
+      barrierDismissible: false, // Evitar que se pueda cerrar al tocar fuera
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
@@ -85,13 +85,14 @@ class _AskGeminiAboutItState extends State<AskGeminiAboutIt> {
       },
     );
 
-    await askGeminiIA(widget.type);
+    response = await GeminiIA.askGeminiIA(widget.type, widget.topic);
 
     //Actualizar el contenido del AlertDialog
 
     Navigator.of(context).pop(); // Cerrar el AlertDialog con el indicador
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
@@ -135,35 +136,6 @@ class _AskGeminiAboutItState extends State<AskGeminiAboutIt> {
         );
       },
     );
-  }
-
-  Future<void> askGeminiIA(ShowType type) async {
-    final model = GenerativeModel(
-      model: 'gemini-1.5-flash-latest',
-      apiKey: Envirovement.googleAIStudio,
-      // generationConfig: GenerationConfig(maxOutputTokens: 200, temperature: 0.5, topP: 0.95, topK: 64, responseMimeType: "text/plain")
-    );
-
-    late String request;
-
-    switch (type) {
-      case ShowType.movie:
-        request =
-            'Cuéntame cosas interesantes sobre la película ${widget.topic} sin incluir spoilers. Estaría bien que añadieras también los premios que haya conseguido en caso de tenerlos. Responde directamente con los datos y divide la respuesta en párrafos sin viñetas.';
-        break;
-      case ShowType.tv:
-        request =
-            'Cuéntame cosas interesantes sobre la serie de televisión ${widget.topic} sin incluir spoilers. Estaría bien que añadieras también los premios que haya conseguido en caso de tenerlos. Responde directamente con los datos y divide la respuesta en párrafos sin viñetas.';
-        break;
-      case ShowType.actor:
-        request =
-            'Cuéntame cosas interesantes sobre esta persona: ${widget.topic}. Háblame de su trayectoria profesional. Estaría bien que añadieras también los premios que haya conseguido en caso de tenerlos. Responde directamente con los datos y divide la respuesta en párrafos sin viñetas.';
-        break;
-      default:
-    }
-
-    final content = [Content.text(request)];
-    response = await model.generateContent(content);
   }
 }
 

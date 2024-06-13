@@ -1,3 +1,4 @@
+import 'package:cinemapedia/config/helpers/gemini_ia.dart';
 import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
@@ -124,7 +125,7 @@ class _ActorDetails extends StatelessWidget {
                   ),
 
                 //RESUMEN CON GEMINI
-                AskGeminiAboutIt(topic: actor.name, type: ShowType.actor),
+                AskGeminiAboutIt(topic: actor.name, type: QuestionType.actor),
                 //RESUMEN CON GEMINI
               ],
             ),

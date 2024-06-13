@@ -1,3 +1,4 @@
+import 'package:cinemapedia/config/helpers/gemini_ia.dart';
 import 'package:cinemapedia/domain/entities/movie_collection.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:cinemapedia/presentation/widgets/movies/similar_movies.dart';
@@ -304,7 +305,7 @@ class _MovieDetails extends StatelessWidget {
                 //COLECCION
 
                 //RESUMEN CON GEMINI
-                AskGeminiAboutIt(topic: movie.title, type: ShowType.movie),
+                AskGeminiAboutIt(topic: movie.title, type: QuestionType.movie),
                 //RESUMEN CON GEMINI
               ],
             ),
@@ -361,7 +362,7 @@ class _MovieDetails extends StatelessWidget {
         const SizedBox(height: 10.0),
 
         //Actores
-        ActorsByShow(showId: movie.id.toString()),
+        ActorsByShow(showId: movie.id.toString(), title: movie.title),
 
         //* Videos de la película (si tiene)
         VideosFromMovie(movieId: movie.id),

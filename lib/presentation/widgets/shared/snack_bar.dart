@@ -9,3 +9,14 @@ void showProviderNameToast(BuildContext context, String name) {
     ),
   );
 }
+
+void showErrorToast(BuildContext context, String message) {
+  final scaffold = ScaffoldMessenger.of(context);
+  scaffold.showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 2),
+      backgroundColor: Colors.redAccent,
+    ),
+  );
+}

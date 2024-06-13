@@ -1,3 +1,5 @@
+import 'package:cinemapedia/config/helpers/gemini_ia.dart';
+import 'package:cinemapedia/presentation/widgets/shared/voice_actor_ia_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,9 +10,10 @@ import '../../providers/providers.dart';
 
 class ActorsByShow extends ConsumerWidget {
   final String showId;
+  final String title;
   final bool isTV;
 
-  const ActorsByShow({super.key, required this.showId, this.isTV = false});
+  const ActorsByShow({super.key, required this.showId, required this.title, this.isTV = false});
 
   @override
   Widget build(BuildContext context, ref) {
@@ -36,8 +39,20 @@ class ActorsByShow extends ConsumerWidget {
       children: [
         if (actors != null && actors.isNotEmpty) ...[
           Padding(
-            padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
-            child: Text('Reparto', style: textStyle.titleLarge),
+            padding: const EdgeInsets.only(left: 20, top: 5, bottom: 3),
+            child: Row(
+              children: [
+                Text('Reparto', style: textStyle.titleLarge),
+                const SizedBox(
+                  width: 20.0,
+                ),
+                if (isTV) AskGeminiAboutVoiceActors(topic: title, type: QuestionType.voiceActorTV) else AskGeminiAboutVoiceActors(topic: title, type: QuestionType.voiceActorMovie)
+              ],
+            ),
+
+            //TODO PONER AQUI EL BOTÓN DE REPARTO DE DOBLAJE
+            //si el idioma original no es castellano
+            //Poner en la consulta el tipo de contenido y el año de estreno (más info)
           ),
 
           //Actors
