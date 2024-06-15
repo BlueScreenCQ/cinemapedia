@@ -95,11 +95,16 @@ class _AskGeminiAboutVoiceActorsState extends State<AskGeminiAboutVoiceActors> {
     jsonString = response!.text!.substring(response!.text!.indexOf('{'), response!.text!.lastIndexOf('}') + 1);
 
     if (jsonString != '') {
-      // Convertir el JSON en una List de Actor
-      Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-      jsonMap.forEach((key, value) {
-        voiceActors.add(Actor(name: key, character: value, id: 0, profilePath: ''));
-      });
+      try {
+        // Convertir el JSON en una List de Actor
+        Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+        jsonMap.forEach((key, value) {
+          voiceActors.add(Actor(name: key, character: value, id: 0, profilePath: ''));
+        });
+      } on Exception {
+        Navigator.of(context).pop();
+        showErrorToast(context, "Reparto de doblaje no encontrado");
+      }
 
       //Actualizar el contenido del AlertDialog
 
