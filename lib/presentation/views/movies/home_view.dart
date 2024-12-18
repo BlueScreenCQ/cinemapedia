@@ -72,7 +72,7 @@ class HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClien
               movies: trendingMovies,
               title: 'En tendencia',
               showDate: true,
-              onlyYear: false,
+              onlyYear: true,
               // subTitle: '',
               loadNextPage: () => ref.read(trendingProvider.notifier).loadNextPage(),
             ),
