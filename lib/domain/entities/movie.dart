@@ -1,14 +1,8 @@
 import 'package:cinemapedia/domain/entities/search_item.dart';
 import 'package:cinemapedia/domain/entities/watch_provider.dart';
 import 'package:cinemapedia/domain/entities/movie_collection.dart';
-import 'package:isar/isar.dart';
 
-part 'movie.g.dart';
-
-@collection
 class Movie extends SearchItem {
-  Id? isarId;
-
   final bool adult;
   final String backdropPath;
   final MovieCollection? belongsToCollection;

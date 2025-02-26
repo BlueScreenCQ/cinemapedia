@@ -66,7 +66,7 @@ class _CustomSliverAppbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
+    // final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
 
     final size = MediaQuery.of(context).size;
 
@@ -74,26 +74,26 @@ class _CustomSliverAppbar extends ConsumerWidget {
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.25,
       foregroundColor: Colors.white,
-      actions: [
-        IconButton(
-          onPressed: () async {
-            // await ref.watch(localStorageRepositoryProvider)
-            //   .toggleFavorite(movie);
+      // actions: [
+      //   IconButton(
+      //     onPressed: () async {
+      //       // await ref.watch(localStorageRepositoryProvider)
+      //       //   .toggleFavorite(movie);
 
-            await ref.read(favoriteMoviesProvider.notifier).toggleFavorite(movie);
+      //       await ref.read(favoriteMoviesProvider.notifier).toggleFavorite(movie);
 
-            //Esto invalida el estado actual del provider y lo vuelve a consultar
-            ref.invalidate(isFavoriteProvider(movie.id));
-          },
-          icon: isFavoriteFuture.when(
-            loading: () => const CircularProgressIndicator(
-              strokeWidth: 2.0,
-            ),
-            data: (isFavorite) => isFavorite ? const Icon(Icons.favorite_rounded, color: Colors.red, size: 30) : const Icon(Icons.favorite_border, size: 30),
-            error: (_, __) => throw UnimplementedError(),
-          ),
-        )
-      ],
+      //       //Esto invalida el estado actual del provider y lo vuelve a consultar
+      //       ref.invalidate(isFavoriteProvider(movie.id));
+      //     },
+      //     icon: isFavoriteFuture.when(
+      //       loading: () => const CircularProgressIndicator(
+      //         strokeWidth: 2.0,
+      //       ),
+      //       data: (isFavorite) => isFavorite ? const Icon(Icons.favorite_rounded, color: Colors.red, size: 30) : const Icon(Icons.favorite_border, size: 30),
+      //       error: (_, __) => throw UnimplementedError(),
+      //     ),
+      //   )
+      // ],
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.only(bottom: 0),
         //Gradiente título

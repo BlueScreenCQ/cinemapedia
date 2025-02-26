@@ -1,3 +1,4 @@
+import 'package:cinemapedia/presentation/widgets/shared/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,7 +16,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
         context.go('/home/1');
         break;
       case 2:
-        context.go('/home/2');
+        showProviderNameToast(context, "Opción no disponible actualmente");
+        //context.go('/home/2');
         break;
     }
   }
@@ -25,7 +27,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return BottomNavigationBar(elevation: 0, onTap: (index) => onItemTap(context, index), currentIndex: currentIndex, items: const [
       BottomNavigationBarItem(icon: Icon(Icons.movie_outlined), label: 'Películas'),
       BottomNavigationBarItem(icon: Icon(Icons.live_tv_outlined), label: 'Series'),
-      BottomNavigationBarItem(icon: Icon(Icons.list_outlined), label: 'Listas'),
+      BottomNavigationBarItem(
+          icon: Icon(
+            Icons.list_outlined,
+          ),
+          label: 'Listas'),
     ]);
   }
 }
