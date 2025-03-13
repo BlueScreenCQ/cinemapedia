@@ -332,22 +332,23 @@ class _MovieDetails extends StatelessWidget {
         ),
 
         //GÉNEROS
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            children: [
-              ...movie.genreIds.map((gender) => Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    child: Chip(
-                      label: Text(gender),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                      padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
-                    ),
-                  ))
-            ],
+        if (movie.genreIds != null && movie.genreIds != [])
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              children: [
+                ...movie.genreIds!.map((gender) => Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      child: Chip(
+                        label: Text(gender),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
+                      ),
+                    ))
+              ],
+            ),
           ),
-        ),
 
         //PRODUCTORA
         if (movie.productionCompanies != null && movie.productionCompanies != []) ProductionCompaniesByShow(companies: movie.productionCompanies!),

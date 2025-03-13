@@ -7,7 +7,7 @@ class CombinedCreditMapper {
       backdropPath: (cast.backdropPath != '')
           ? 'https://image.tmdb.org/t/p/w500${cast.backdropPath}'
           : 'https://st2.depositphotos.com/1000434/10200/i/450/depositphotos_102007848-stock-photo-grunge-background-with-filmstrip.jpg',
-      genreIds: cast.genreIds.map((e) => e.toString()).toList(),
+      genreIds: cast.genreIds?.map((e) => e.toString()).toList(),
       id: cast.id,
       originalLanguage: cast.originalLanguage,
       originalTitle: cast.originalTitle,
@@ -32,7 +32,7 @@ class CombinedCreditMapper {
       backdropPath: (crew.backdropPath != '')
           ? 'https://image.tmdb.org/t/p/w500${crew.backdropPath}'
           : 'https://st2.depositphotos.com/1000434/10200/i/450/depositphotos_102007848-stock-photo-grunge-background-with-filmstrip.jpg',
-      genreIds: crew.genreIds.map((e) => e.toString()).toList(),
+      genreIds: crew.genreIds?.map((e) => e.toString()).toList(),
       id: crew.id,
       originalLanguage: crew.originalLanguage,
       originalTitle: crew.originalTitle,

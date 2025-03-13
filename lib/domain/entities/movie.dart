@@ -7,7 +7,7 @@ class Movie extends SearchItem {
   final String backdropPath;
   final MovieCollection? belongsToCollection;
   final int? budget;
-  final List<String> genreIds;
+  final List<String>? genreIds;
   final int id;
   final String? imdbId;
   final String originalLanguage;

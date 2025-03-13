@@ -49,10 +49,6 @@ class ActorsByShow extends ConsumerWidget {
                 if (isTV) AskGeminiAboutVoiceActors(topic: title, type: QuestionType.voiceActorTV) else AskGeminiAboutVoiceActors(topic: title, type: QuestionType.voiceActorMovie)
               ],
             ),
-
-            //TODO PONER AQUI EL BOTÓN DE REPARTO DE DOBLAJE
-            //si el idioma original no es castellano
-            //Poner en la consulta el tipo de contenido y el año de estreno (más info)
           ),
 
           //Actors

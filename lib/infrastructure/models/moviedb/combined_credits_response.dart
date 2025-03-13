@@ -31,7 +31,7 @@ class CombinedCreditsResponse {
 class Cast {
   final bool adult;
   final String backdropPath;
-  final List<int> genreIds;
+  final List<int>? genreIds;
   final int id;
   final String originalLanguage;
   final String originalTitle;
@@ -86,18 +86,18 @@ class Cast {
   factory Cast.fromJson(Map<String, dynamic> json) => Cast(
         adult: json["adult"],
         backdropPath: json["backdrop_path"] ?? '',
-        genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
+        genreIds: (json.containsKey('genre_ids')) && json['genre_ids'] != "" ? List<int>.from(json["genre_ids"].map((x) => x)) : null,
         id: json["id"],
         originalLanguage: json["original_language"],
         originalTitle: json["original_title"] ?? '',
         overview: json["overview"],
-        popularity: json["popularity"]?.toDouble(),
+        popularity: json["popularity"]?.toDouble() ?? 0,
         posterPath: json["poster_path"] ?? '',
         releaseDate: (json.containsKey("release_date") && json['release_date'] != "" && DateTime.tryParse(json["release_date"]) != null) ? DateTime.parse(json["release_date"]) : DateTime(1900, 1, 1),
         title: json["title"] ?? '',
         video: json["video"] ?? false,
-        voteAverage: json["vote_average"]?.toDouble(),
-        voteCount: json["vote_count"],
+        voteAverage: json["vote_average"]?.toDouble() ?? 0,
+        voteCount: json["vote_count"] ?? 0,
         character: json["character"] ?? '',
         creditId: json["credit_id"],
         // order: json["order"],
@@ -116,7 +116,7 @@ class Cast {
   Map<String, dynamic> toJson() => {
         "adult": adult,
         "backdrop_path": backdropPath,
-        "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
+        "genre_ids": (genreIds != null) ? List<dynamic>.from(genreIds!.map((x) => x)) : null,
         "id": id,
         "original_language": originalLanguage,
         "original_title": originalTitle,

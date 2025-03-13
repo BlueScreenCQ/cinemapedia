@@ -26,7 +26,7 @@ class GeminiIA {
         break;
       case QuestionType.actor:
         request =
-            'Cuéntame cosas interesantes sobre esta persona: $topic}. Háblame de su trayectoria profesional. Estaría bien que añadieras también los premios que haya conseguido en caso de tenerlos. Responde directamente con los datos y divide la respuesta en párrafos sin viñetas.';
+            'Cuéntame cosas interesantes sobre esta persona: $topic. Háblame de su trayectoria profesional. Estaría bien que añadieras también los premios que haya conseguido en caso de tenerlos. Responde directamente con los datos y divide la respuesta en párrafos sin viñetas.';
         break;
       case QuestionType.voiceActorMovie:
         request =

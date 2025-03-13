@@ -38,9 +38,9 @@ class _CustomChoiceChipState extends ConsumerState<CustomChoiceChip> {
 
                   showSearch(context: context, query: searchQuery, delegate: CustomSearchDelegate(ref: ref)).then((item) {
                     if (item != null) {
-                      if (item.isPeli) context.push('/home/0/movie/${item.sId}');
-                      if (item.isTV) context.push('/home/0/tv/${item.sId}');
-                      if (item.isActor) context.push('/home/0/actor/${item.sId}');
+                      if (item.isPeli && context.mounted) context.push('/home/0/movie/${item.sId}');
+                      if (item.isTV && context.mounted) context.push('/home/0/tv/${item.sId}');
+                      if (item.isActor && context.mounted) context.push('/home/0/actor/${item.sId}');
                     }
                   });
                 }
